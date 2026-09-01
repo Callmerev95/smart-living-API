@@ -336,5 +336,186 @@
     "aliases": ["santan", "coconut cream"],
     "category": "other",
     "staple": false
+  },
+
+  {
+    "name": "fish",
+    "displayName": "Ikan",
+    "aliases": ["ikan", "ikan fillet", "fillet ikan", "fish fillet"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "anchovy",
+    "displayName": "Ikan Teri",
+    "aliases": ["teri", "ikan teri", "anchovies"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "tuna",
+    "displayName": "Tuna",
+    "aliases": ["ikan tuna"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "squid",
+    "displayName": "Cumi",
+    "aliases": ["cumi", "cumi-cumi", "sotong"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "sausage",
+    "displayName": "Sosis",
+    "aliases": ["sosis"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "meatball",
+    "displayName": "Bakso",
+    "aliases": ["bakso", "pentol"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "peanut",
+    "displayName": "Kacang Tanah",
+    "aliases": ["kacang tanah", "kacang", "peanuts"],
+    "category": "protein",
+    "staple": false
+  },
+
+  {
+    "name": "broccoli",
+    "displayName": "Brokoli",
+    "aliases": ["brokoli"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "cauliflower",
+    "displayName": "Kembang Kol",
+    "aliases": ["kembang kol", "bunga kol"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "green_bean",
+    "displayName": "Buncis",
+    "aliases": ["buncis"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "eggplant",
+    "displayName": "Terong",
+    "aliases": ["terong", "terung"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "chayote",
+    "displayName": "Labu Siam",
+    "aliases": ["labu siam", "labu jipang"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "bitter_gourd",
+    "displayName": "Pare",
+    "aliases": ["pare", "paria"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "napa_cabbage",
+    "displayName": "Sawi Putih",
+    "aliases": ["sawi putih"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "celery",
+    "displayName": "Seledri",
+    "aliases": ["seledri", "daun seledri"],
+    "category": "vegetable",
+    "staple": false
+  },
+
+  {
+    "name": "vermicelli",
+    "displayName": "Bihun",
+    "aliases": ["bihun"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "glass_noodle",
+    "displayName": "Soun",
+    "aliases": ["soun", "sohun", "glass noodle"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "macaroni",
+    "displayName": "Makaroni",
+    "aliases": ["makaroni", "macaroni"],
+    "category": "grain",
+    "staple": false
+  },
+
+  {
+    "name": "candlenut",
+    "displayName": "Kemiri",
+    "aliases": ["kemiri"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "coriander",
+    "displayName": "Ketumbar",
+    "aliases": ["ketumbar"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "lime_leaf",
+    "displayName": "Daun Jeruk",
+    "aliases": ["daun jeruk"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "tamarind",
+    "displayName": "Asam Jawa",
+    "aliases": ["asam jawa", "asam"],
+    "category": "fruit",
+    "staple": false
+  },
+
+  {
+    "name": "tomato_sauce",
+    "displayName": "Saus Tomat",
+    "aliases": ["saus tomat"],
+    "category": "condiment",
+    "staple": false
+  },
+  {
+    "name": "sesame_oil",
+    "displayName": "Minyak Wijen",
+    "aliases": ["minyak wijen", "sesame oil"],
+    "category": "condiment",
+    "staple": false
+  },
+
+  {
+    "name": "cheese",
+    "displayName": "Keju",
+    "aliases": ["keju", "cheddar", "keju cheddar"],
+    "category": "dairy",
+    "staple": false
   }
 ]
