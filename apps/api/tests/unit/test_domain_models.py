@@ -8,6 +8,7 @@ import dataclasses
 import pytest
 
 from app.domain.models.ingredient import Ingredient, IngredientCategory
+from app.domain.models.match_result import MatchResult
 from app.domain.models.recipe import Difficulty, Recipe, RecipeIngredient
 
 
@@ -183,3 +184,49 @@ class TestRecipe:
         recipe = make_recipe(ingredients=(RecipeIngredient(name="egg", required=False),))
         assert recipe.required_ingredient_names() == ()
         assert recipe.all_ingredient_names() == ("egg",)
+
+
+class TestMatchResult:
+    @staticmethod
+    def make(**overrides: object) -> MatchResult:
+        defaults: dict[str, object] = {
+            "recipe_id": "recipe_001",
+            "match_percentage": 75,
+            "available_ingredients": ("egg", "chicken", "carrot"),
+            "missing_ingredients": ("onion",),
+            "cooking_time_minutes": 15,
+        }
+        defaults.update(overrides)
+        return MatchResult(**defaults)  # type: ignore[arg-type]
+
+    def test_instantiation(self) -> None:
+        result = self.make()
+        assert result.recipe_id == "recipe_001"
+        assert result.match_percentage == 75
+        assert result.cooking_time_minutes == 15
+
+    def test_is_frozen(self) -> None:
+        result = self.make()
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            result.match_percentage = 100  # type: ignore[misc]
+
+    def test_missing_count_derived_from_missing_ingredients(self) -> None:
+        """Property turunan — tidak mungkin tidak sinkron dengan array-nya."""
+        assert self.make(missing_ingredients=()).missing_count == 0
+        assert self.make(missing_ingredients=("onion",)).missing_count == 1
+        assert self.make(missing_ingredients=("onion", "garlic")).missing_count == 2
+
+    def test_missing_count_is_not_a_field(self) -> None:
+        field_names = {f.name for f in dataclasses.fields(MatchResult)}
+        assert "missing_count" not in field_names
+
+    def test_uses_tuple_for_determinism(self) -> None:
+        result = self.make()
+        assert isinstance(result.available_ingredients, tuple)
+        assert isinstance(result.missing_ingredients, tuple)
+
+    def test_has_no_scoring_method(self) -> None:
+        """Perhitungan skor milik `domain/matching/scoring.py`, bukan model."""
+        assert not any(
+            name.startswith("calculate") or name.startswith("score") for name in dir(MatchResult)
+        )
