@@ -517,5 +517,116 @@
     "aliases": ["keju", "cheddar", "keju cheddar"],
     "category": "dairy",
     "staple": false
+  },
+
+  {
+    "name": "goat",
+    "displayName": "Daging Kambing",
+    "aliases": ["kambing", "daging kambing"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "duck_egg",
+    "displayName": "Telur Bebek",
+    "aliases": ["telur bebek"],
+    "category": "protein",
+    "staple": false
+  },
+
+  {
+    "name": "cassava_leaf",
+    "displayName": "Daun Singkong",
+    "aliases": ["daun singkong"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "red_spinach",
+    "displayName": "Bayam Merah",
+    "aliases": ["bayam merah"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "zucchini",
+    "displayName": "Zukini",
+    "aliases": ["zukini", "zucchini"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "bell_pepper",
+    "displayName": "Paprika",
+    "aliases": ["paprika"],
+    "category": "vegetable",
+    "staple": false
+  },
+
+  {
+    "name": "rice_flour",
+    "displayName": "Tepung Beras",
+    "aliases": ["tepung beras"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "glutinous_flour",
+    "displayName": "Tepung Ketan",
+    "aliases": ["tepung ketan"],
+    "category": "grain",
+    "staple": false
+  },
+
+  {
+    "name": "cumin",
+    "displayName": "Jintan",
+    "aliases": ["jintan", "jinten"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "cardamom",
+    "displayName": "Kapulaga",
+    "aliases": ["kapulaga"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "clove",
+    "displayName": "Cengkeh",
+    "aliases": ["cengkeh"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "cinnamon",
+    "displayName": "Kayu Manis",
+    "aliases": ["kayu manis"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "brown_sugar",
+    "displayName": "Gula Merah",
+    "aliases": ["gula merah", "gula jawa"],
+    "category": "spice",
+    "staple": false
+  },
+
+  {
+    "name": "chicken_stock",
+    "displayName": "Kaldu Ayam",
+    "aliases": ["kaldu ayam"],
+    "category": "condiment",
+    "staple": false
+  },
+
+  {
+    "name": "shredded_coconut",
+    "displayName": "Kelapa Parut",
+    "aliases": ["kelapa parut", "kelapa muda parut"],
+    "category": "other",
+    "staple": false
   }
 ]
