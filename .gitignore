@@ -1,0 +1,14 @@
+.venv
+__pycache__
+*.pyc
+node_modules
+.next
+.env
+.env.local
+*.egg-info
+dist
+build
+.vite
+.DS_Store
+*.log
+*.sqlite3
