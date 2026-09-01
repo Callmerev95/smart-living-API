@@ -47,3 +47,11 @@ known-first-party = ["app"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.pytest]
+addopts = ["-v", "--tb=short", "--cov=app", "--cov-report=term-missing"]
+testpaths = ["tests"]
+
+[tool.coverage.report]
+fail_under = 0
+precision = 1
