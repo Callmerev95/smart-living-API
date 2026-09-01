@@ -424,5 +424,445 @@
     ],
     "tags": ["makan-siang", "camilan", "vegetarian", "indonesian"],
     "source": "original"
+  },
+  {
+    "id": "recipe_016",
+    "name": "Ikan Goreng Bumbu Kuning",
+    "description": "Ikan dilumuri bumbu kuning lalu digoreng, aromanya tajam dan dagingnya tetap lembut.",
+    "ingredients": [
+      { "name": "fish", "required": true },
+      { "name": "turmeric", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "coriander", "required": false },
+      { "name": "lime", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 25,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Bersihkan ikan, kerat permukaannya, lumuri perasan jeruk nipis dan garam.",
+      "Haluskan kunyit, bawang putih, bawang merah, dan ketumbar.",
+      "Balur ikan dengan bumbu halus, diamkan sepuluh menit agar meresap.",
+      "Panaskan minyak banyak dengan api sedang hingga benar-benar panas.",
+      "Goreng ikan tanpa dibolak-balik sampai satu sisi kering, baru dibalik.",
+      "Angkat saat kedua sisi kecokelatan, tiriskan, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "indonesian", "no-pork"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_017",
+    "name": "Tumis Udang Buncis",
+    "description": "Udang dan buncis ditumis cepat dengan bawang putih, manis alami udangnya terasa jelas.",
+    "ingredients": [
+      { "name": "shrimp", "required": true },
+      { "name": "green_bean", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "oyster_sauce", "required": true },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Kupas udang, buang kotoran di punggungnya, lalu tiriskan.",
+      "Potong buncis menjadi dua bagian, cincang bawang putih.",
+      "Tumis bawang putih hingga wangi, masukkan udang.",
+      "Masak udang hingga berubah warna menjadi oranye, lalu sisihkan ke pinggir wajan.",
+      "Masukkan buncis dan sedikit air, masak hingga warnanya lebih hijau.",
+      "Tambahkan saus tiram, garam, dan lada, aduk rata, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "praktis", "chinese-indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_018",
+    "name": "Sambal Goreng Teri Kacang",
+    "description": "Teri dan kacang tanah dibalut sambal manis pedas, tahan lama dan cocok jadi stok lauk.",
+    "ingredients": [
+      { "name": "anchovy", "required": true },
+      { "name": "peanut", "required": true },
+      { "name": "chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "tamarind", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 30,
+    "difficulty": "medium",
+    "servings": 4,
+    "steps": [
+      "Goreng kacang tanah dengan api kecil hingga matang merata, lalu tiriskan.",
+      "Goreng teri sampai kering dan renyah, tiriskan bersama kacang.",
+      "Haluskan cabai merah, bawang merah, dan bawang putih.",
+      "Tumis bumbu halus dengan api kecil hingga warnanya gelap dan minyak memisah.",
+      "Bumbui garam, gula, dan air asam jawa, masak hingga bumbu mengental.",
+      "Matikan api, masukkan teri dan kacang, aduk cepat agar tetap renyah.",
+      "Sajikan setelah dingin agar teksturnya bertahan."
+    ],
+    "tags": ["makan-siang", "pedas", "kering", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_019",
+    "name": "Semur Daging Kentang",
+    "description": "Daging sapi dan kentang dimasak kecap hingga kuahnya kental dan dagingnya empuk.",
+    "ingredients": [
+      { "name": "beef", "required": true },
+      { "name": "potato", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "candlenut", "required": false },
+      { "name": "bay_leaf", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": true },
+      { "name": "water", "required": true }
+    ],
+    "cookingTimeMinutes": 90,
+    "difficulty": "hard",
+    "servings": 4,
+    "steps": [
+      "Potong daging melawan serat, rebus sebentar, lalu buang air rebusan pertama.",
+      "Haluskan bawang merah, bawang putih, dan kemiri.",
+      "Tumis bumbu halus bersama daun salam hingga wangi dan tidak lagi berbau mentah.",
+      "Masukkan daging, aduk hingga permukaannya terbalut bumbu.",
+      "Tuang air hingga daging terendam, masukkan kecap manis, tutup wajan.",
+      "Masak dengan api kecil hingga daging empuk dan kuah menyusut separuh.",
+      "Masukkan kentang potong, masak hingga lunak tanpa hancur.",
+      "Bumbui garam dan lada, koreksi rasa, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "berkuah", "indonesian", "no-pork"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_020",
+    "name": "Cumi Saus Tiram",
+    "description": "Cumi dimasak singkat dengan saus tiram agar teksturnya tetap kenyal, bukan keras.",
+    "ingredients": [
+      { "name": "squid", "required": true },
+      { "name": "onion", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "oyster_sauce", "required": true },
+      { "name": "chili", "required": false },
+      { "name": "spring_onion", "required": false },
+      { "name": "cornstarch", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "medium",
+    "servings": 2,
+    "steps": [
+      "Bersihkan cumi, potong menjadi cincin, lalu tiriskan hingga benar-benar kering.",
+      "Iris bawang bombay dan cabai, cincang bawang putih.",
+      "Larutkan maizena dengan sedikit air, sisihkan.",
+      "Panaskan minyak dengan api besar, tumis bawang putih dan bawang bombay.",
+      "Masukkan cumi, masak cepat maksimal dua menit agar tidak keras.",
+      "Tambahkan saus tiram, garam, dan air, aduk rata.",
+      "Tuang larutan maizena, aduk hingga kuah mengental, taburi daun bawang, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "chinese-indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_021",
+    "name": "Bihun Goreng Sayur",
+    "description": "Bihun goreng dengan sawi dan wortel, ringan tapi cukup mengenyangkan.",
+    "ingredients": [
+      { "name": "vermicelli", "required": true },
+      { "name": "napa_cabbage", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "salty_soy_sauce", "required": true },
+      { "name": "celery", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Rendam bihun dalam air panas hingga lunak, tiriskan sampai tidak berair.",
+      "Iris sawi putih dan wortel tipis memanjang, cincang bawang putih.",
+      "Tumis bawang putih hingga wangi, pecahkan telur, aduk hingga berbutir.",
+      "Masukkan wortel, tumis dua menit, lalu tambahkan sawi putih.",
+      "Masukkan bihun, tuang kecap asin, bumbui garam dan lada.",
+      "Aduk perlahan agar bihun tidak putus, tambahkan seledri, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "praktis", "hemat", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_022",
+    "name": "Terong Balado",
+    "description": "Terong goreng dibalut sambal merah, lembut di dalam dengan rasa pedas manis.",
+    "ingredients": [
+      { "name": "eggplant", "required": true },
+      { "name": "chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "tomato", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 25,
+    "difficulty": "easy",
+    "servings": 3,
+    "steps": [
+      "Potong terong memanjang, taburi sedikit garam, diamkan lima menit.",
+      "Goreng terong dengan api sedang hingga lunak dan sedikit kecokelatan, tiriskan.",
+      "Haluskan cabai merah, bawang merah, bawang putih, dan tomat.",
+      "Tumis bumbu halus dengan api kecil hingga warnanya gelap dan minyak memisah.",
+      "Bumbui garam dan gula, koreksi rasa.",
+      "Masukkan terong, aduk perlahan agar tidak hancur, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "pedas", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_023",
+    "name": "Sup Makaroni Sosis",
+    "description": "Sup bening dengan makaroni dan sosis, favorit anak-anak dan cepat dibuat.",
+    "ingredients": [
+      { "name": "macaroni", "required": true },
+      { "name": "sausage", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "onion", "required": false },
+      { "name": "celery", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 25,
+    "difficulty": "easy",
+    "servings": 3,
+    "steps": [
+      "Rebus makaroni hingga lunak, tiriskan, lalu sisihkan.",
+      "Iris sosis, potong wortel menjadi kubus, cincang bawang putih dan bawang bombay.",
+      "Tumis bawang putih dan bawang bombay hingga wangi.",
+      "Tuang air, didihkan, lalu masukkan wortel.",
+      "Masukkan sosis dan makaroni, bumbui garam dan lada.",
+      "Masak hingga wortel lunak, taburi seledri, lalu sajikan panas."
+    ],
+    "tags": ["makan-malam", "berkuah", "praktis", "western-sederhana"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_024",
+    "name": "Tumis Brokoli Bakso",
+    "description": "Brokoli dan bakso ditumis ringan, sayurnya tetap renyah dan berwarna cerah.",
+    "ingredients": [
+      { "name": "broccoli", "required": true },
+      { "name": "meatball", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "oyster_sauce", "required": true },
+      { "name": "carrot", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong brokoli per kuntum, rendam air garam sebentar, lalu cuci bersih.",
+      "Belah bakso menjadi dua, cincang bawang putih.",
+      "Tumis bawang putih hingga wangi, masukkan bakso, aduk sebentar.",
+      "Masukkan brokoli dan sedikit air, tutup wajan selama satu menit.",
+      "Buka tutup, tambahkan saus tiram, garam, dan lada.",
+      "Aduk cepat, matikan api saat brokoli masih hijau terang, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "praktis", "sehat", "chinese-indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_025",
+    "name": "Tumis Kembang Kol Telur",
+    "description": "Kembang kol ditumis bersama telur berbutir, lauk hemat yang mengenyangkan.",
+    "ingredients": [
+      { "name": "cauliflower", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "spring_onion", "required": false },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong kembang kol per kuntum, rendam air garam, lalu tiriskan.",
+      "Cincang bawang putih dan iris cabai rawit.",
+      "Tumis bawang putih hingga wangi, pecahkan telur, aduk hingga berbutir.",
+      "Masukkan kembang kol dan sedikit air, aduk rata.",
+      "Bumbui garam dan lada, masak hingga kembang kol lunak tapi tidak lembek.",
+      "Taburi daun bawang, aduk sebentar, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "hemat", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_026",
+    "name": "Sayur Labu Siam Santan",
+    "description": "Labu siam dimasak santan encer dengan bumbu sederhana, kuahnya ringan dan gurih.",
+    "ingredients": [
+      { "name": "chayote", "required": true },
+      { "name": "coconut_milk", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "bay_leaf", "required": false },
+      { "name": "galangal", "required": false },
+      { "name": "chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": false },
+      { "name": "water", "required": true }
+    ],
+    "cookingTimeMinutes": 30,
+    "difficulty": "medium",
+    "servings": 4,
+    "steps": [
+      "Kupas labu siam, potong menjadi batang kecil, lalu cuci untuk mengurangi getahnya.",
+      "Iris bawang merah, bawang putih, dan cabai merah.",
+      "Didihkan air bersama irisan bumbu, daun salam, dan lengkuas.",
+      "Masukkan labu siam, masak hingga setengah lunak.",
+      "Tuang santan, aduk terus dan jaga api tetap kecil agar santan tidak pecah.",
+      "Bumbui garam dan sedikit gula, masak hingga labu lunak, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "berkuah", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_027",
+    "name": "Tumis Pare Teri",
+    "description": "Pare ditumis bersama teri renyah, pahitnya berkurang setelah diremas garam.",
+    "ingredients": [
+      { "name": "bitter_gourd", "required": true },
+      { "name": "anchovy", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "medium",
+    "servings": 2,
+    "steps": [
+      "Belah pare, buang bijinya, lalu iris tipis.",
+      "Remas irisan pare dengan garam, diamkan lima menit, lalu bilas hingga bersih.",
+      "Goreng teri sampai kering, tiriskan, lalu sisihkan.",
+      "Tumis bawang putih, bawang merah, dan cabai rawit hingga wangi.",
+      "Masukkan pare, tumis hingga warnanya berubah lebih tua.",
+      "Bumbui garam dan sedikit gula, masukkan teri, aduk cepat, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "kering", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_028",
+    "name": "Tumis Kacang Panjang Tempe",
+    "description": "Kacang panjang dan tempe ditumis pedas manis, lauk sehari-hari yang murah.",
+    "ingredients": [
+      { "name": "long_bean", "required": true },
+      { "name": "tempeh", "required": true },
+      { "name": "chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "soy_sauce", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 3,
+    "steps": [
+      "Potong kacang panjang sepanjang dua sentimeter, potong tempe menjadi dadu.",
+      "Goreng tempe setengah kering agar tidak hancur saat ditumis, lalu tiriskan.",
+      "Iris cabai merah, bawang merah, dan bawang putih.",
+      "Tumis irisan bumbu hingga wangi dan cabai melunak.",
+      "Masukkan kacang panjang dan sedikit air, masak hingga warnanya lebih hijau.",
+      "Masukkan tempe, bumbui garam dan kecap manis, aduk rata, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "hemat", "pedas", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_029",
+    "name": "Roti Bakar Telur Keju",
+    "description": "Roti isi telur dan keju yang dipanggang di wajan, sarapan jadi dalam sepuluh menit.",
+    "ingredients": [
+      { "name": "bread", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "cheese", "required": true },
+      { "name": "butter", "required": true },
+      { "name": "spring_onion", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false }
+    ],
+    "cookingTimeMinutes": 10,
+    "difficulty": "easy",
+    "servings": 1,
+    "steps": [
+      "Kocok telur bersama garam, lada, dan irisan daun bawang.",
+      "Panaskan wajan datar, lelehkan sedikit mentega.",
+      "Tuang telur, masak hingga setengah set, lalu lipat seukuran roti.",
+      "Olesi roti dengan mentega pada sisi luarnya.",
+      "Susun telur dan keju di antara dua lembar roti.",
+      "Panggang di wajan hingga kedua sisi kecokelatan dan keju meleleh, lalu sajikan."
+    ],
+    "tags": ["sarapan", "praktis", "western-sederhana"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_030",
+    "name": "Tumis Tuna Pedas Kemangi",
+    "description": "Tuna dimasak pedas dengan bumbu iris, cocok untuk stok lauk beberapa hari.",
+    "ingredients": [
+      { "name": "tuna", "required": true },
+      { "name": "bird_eye_chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "tomato", "required": false },
+      { "name": "lime_leaf", "required": false },
+      { "name": "lime", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 25,
+    "difficulty": "medium",
+    "servings": 3,
+    "steps": [
+      "Potong tuna menjadi dadu, lumuri perasan jeruk nipis dan garam, diamkan lima menit.",
+      "Goreng tuna sebentar hingga permukaannya kencang, lalu tiriskan.",
+      "Iris cabai rawit, bawang merah, bawang putih, dan tomat.",
+      "Tumis irisan bumbu bersama daun jeruk hingga wangi dan bawang bening.",
+      "Masukkan tuna, aduk perlahan agar dagingnya tidak hancur.",
+      "Bumbui garam dan sedikit gula, masak dua menit lagi, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "pedas", "indonesian", "no-pork"],
+    "source": "original"
   }
 ]
