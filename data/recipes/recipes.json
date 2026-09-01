@@ -1,0 +1,428 @@
+[
+  {
+    "id": "recipe_001",
+    "name": "Omelet Ayam Wortel",
+    "description": "Omelet berisi ayam dan wortel, cukup satu wajan untuk sarapan yang mengenyangkan.",
+    "ingredients": [
+      { "name": "egg", "required": true },
+      { "name": "chicken", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "shallot", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong ayam dan wortel menjadi dadu kecil agar cepat matang.",
+      "Kocok telur dalam wadah, bumbui dengan garam dan lada.",
+      "Panaskan minyak, tumis bawang merah hingga wangi, masukkan ayam sampai berubah warna.",
+      "Masukkan wortel, tumis hingga sedikit lunak, lalu ratakan di wajan.",
+      "Tuang telur kocok, masak dengan api sedang hingga bagian bawah set.",
+      "Lipat omelet, masak sebentar sampai bagian dalam matang, lalu sajikan hangat."
+    ],
+    "tags": ["sarapan", "praktis", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_002",
+    "name": "Tumis Ayam Sayur Kecap",
+    "description": "Tumisan ayam berbumbu kecap dengan wortel dan kol, sekali masak langsung jadi lauk lengkap.",
+    "ingredients": [
+      { "name": "chicken", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "cabbage", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "cooking_oil", "required": true },
+      { "name": "water", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong ayam menjadi dadu kecil, cincang bawang putih, iris kol dan wortel.",
+      "Panaskan minyak, tumis bawang putih hingga wangi.",
+      "Masukkan ayam, masak hingga permukaannya berubah warna.",
+      "Tambahkan kecap manis dan sedikit air, aduk hingga ayam terbalut bumbu.",
+      "Masukkan wortel, masak dua menit, lalu tambahkan kol.",
+      "Bumbui dengan garam, masak hingga sayuran layu tapi masih renyah, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "praktis", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_003",
+    "name": "Nasi Goreng Telur",
+    "description": "Nasi goreng sederhana dengan telur dan bumbu bawang, penyelamat nasi sisa semalam.",
+    "ingredients": [
+      { "name": "rice", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "spring_onion", "required": false },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Cincang bawang putih dan bawang merah, iris daun bawang.",
+      "Panaskan minyak, tumis bawang hingga wangi dan sedikit kecokelatan.",
+      "Pecahkan telur ke wajan, aduk cepat hingga setengah matang.",
+      "Masukkan nasi, aduk sambil ditekan agar tidak menggumpal.",
+      "Tuang kecap manis, bumbui garam dan lada, aduk hingga warna nasi merata.",
+      "Taburkan daun bawang, aduk sebentar, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "praktis", "hemat", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_004",
+    "name": "Telur Dadar Daun Bawang",
+    "description": "Telur dadar tebal beraroma daun bawang, lauk cepat saat isi kulkas hampir habis.",
+    "ingredients": [
+      { "name": "egg", "required": true },
+      { "name": "spring_onion", "required": true },
+      { "name": "shallot", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 10,
+    "difficulty": "easy",
+    "servings": 1,
+    "steps": [
+      "Iris halus daun bawang dan bawang merah.",
+      "Kocok telur hingga berbusa, masukkan irisan daun bawang, garam, dan lada.",
+      "Panaskan minyak agak banyak dengan api sedang.",
+      "Tuang telur, biarkan tanpa diaduk hingga tepinya mengembang dan kaku.",
+      "Balik telur, masak hingga kedua sisi kecokelatan, lalu tiriskan dan sajikan."
+    ],
+    "tags": ["sarapan", "praktis", "hemat", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_005",
+    "name": "Tahu Goreng Sambal Kecap",
+    "description": "Tahu goreng renyah dengan sambal kecap segar, lauk sederhana yang selalu habis.",
+    "ingredients": [
+      { "name": "tofu", "required": true },
+      { "name": "bird_eye_chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "lime", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong tahu menjadi kotak, lumuri dengan sedikit garam.",
+      "Panaskan minyak, goreng tahu hingga permukaannya kering dan kecokelatan.",
+      "Iris tipis cabai rawit dan bawang merah.",
+      "Campur irisan cabai dan bawang dengan kecap manis, tambahkan perasan jeruk nipis.",
+      "Tata tahu di piring, siram sambal kecap di atasnya, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "praktis", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_006",
+    "name": "Tempe Goreng Tepung",
+    "description": "Tempe berbalut tepung gurih yang renyah di luar dan lembut di dalam.",
+    "ingredients": [
+      { "name": "tempeh", "required": true },
+      { "name": "flour", "required": true },
+      { "name": "cornstarch", "required": false },
+      { "name": "garlic", "required": true },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong tempe tipis memanjang agar cepat matang dan renyah.",
+      "Haluskan bawang putih, campur dengan tepung terigu, maizena, garam, dan lada.",
+      "Tuang air sedikit demi sedikit sambil diaduk hingga adonan kental encer.",
+      "Panaskan minyak cukup banyak dengan api sedang.",
+      "Celupkan tempe ke adonan, goreng hingga kuning kecokelatan.",
+      "Tiriskan di atas tisu dapur agar tidak berminyak, lalu sajikan."
+    ],
+    "tags": ["camilan", "hemat", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_007",
+    "name": "Orek Tempe Kecap",
+    "description": "Tempe potong kecil dimasak kecap hingga meresap, tahan disimpan beberapa hari.",
+    "ingredients": [
+      { "name": "tempeh", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "chili", "required": false },
+      { "name": "bay_leaf", "required": false },
+      { "name": "galangal", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 25,
+    "difficulty": "easy",
+    "servings": 3,
+    "steps": [
+      "Potong tempe menjadi batang kecil, goreng setengah kering, lalu tiriskan.",
+      "Iris bawang putih, bawang merah, dan cabai merah.",
+      "Tumis irisan bumbu bersama daun salam dan lengkuas hingga wangi.",
+      "Masukkan tempe, aduk agar terbalut bumbu.",
+      "Tuang kecap manis dan sedikit air, bumbui garam.",
+      "Masak dengan api kecil hingga air menyusut dan tempe berwarna gelap, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "hemat", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_008",
+    "name": "Tumis Bayam Bawang Putih",
+    "description": "Bayam tumis bawang putih yang matang dalam hitungan menit tanpa kehilangan warna.",
+    "ingredients": [
+      { "name": "spinach", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 10,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Cuci bayam, petik daunnya, lalu tiriskan.",
+      "Cincang bawang putih dan iris cabai rawit.",
+      "Panaskan minyak, tumis bawang putih hingga wangi dan mulai menguning.",
+      "Masukkan bayam dan sedikit air, aduk cepat dengan api besar.",
+      "Bumbui garam, masak hingga bayam layu tapi masih hijau, lalu segera sajikan."
+    ],
+    "tags": ["makan-siang", "sehat", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_009",
+    "name": "Tumis Tauge Tahu",
+    "description": "Tumisan tauge dan tahu yang renyah dan ringan, cocok untuk makan malam cepat.",
+    "ingredients": [
+      { "name": "bean_sprouts", "required": true },
+      { "name": "tofu", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "spring_onion", "required": false },
+      { "name": "salty_soy_sauce", "required": true },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Potong tahu menjadi dadu, goreng sebentar hingga kulitnya kencang.",
+      "Cuci tauge, buang kulit yang mengapung, lalu tiriskan.",
+      "Tumis bawang putih cincang hingga wangi.",
+      "Masukkan tahu dan kecap asin, aduk rata.",
+      "Masukkan tauge, bumbui garam dan lada, aduk cepat dengan api besar.",
+      "Matikan api saat tauge masih renyah, taburi daun bawang, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "praktis", "vegetarian", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_010",
+    "name": "Telur Balado",
+    "description": "Telur rebus dibalut sambal merah pedas manis yang meresap ke permukaannya.",
+    "ingredients": [
+      { "name": "egg", "required": true },
+      { "name": "chili", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "tomato", "required": false },
+      { "name": "lime", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "sugar", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 30,
+    "difficulty": "medium",
+    "servings": 3,
+    "steps": [
+      "Rebus telur hingga matang, kupas, lalu goreng sebentar sampai kulitnya berkerut.",
+      "Haluskan cabai merah, bawang merah, bawang putih, dan tomat.",
+      "Panaskan minyak, tumis bumbu halus dengan api kecil.",
+      "Masak bumbu sambil diaduk hingga warnanya lebih gelap dan minyak memisah.",
+      "Bumbui garam dan gula, koreksi rasa.",
+      "Masukkan telur, aduk perlahan hingga seluruh permukaan terbalut sambal.",
+      "Tambahkan perasan jeruk nipis, aduk sekali lagi, lalu sajikan."
+    ],
+    "tags": ["makan-siang", "pedas", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_011",
+    "name": "Ayam Goreng Kunyit",
+    "description": "Ayam diungkep bumbu kunyit lalu digoreng kering, gurih sampai ke bagian dalam.",
+    "ingredients": [
+      { "name": "chicken", "required": true },
+      { "name": "turmeric", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "ginger", "required": false },
+      { "name": "lime", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 40,
+    "difficulty": "medium",
+    "servings": 3,
+    "steps": [
+      "Lumuri ayam dengan perasan jeruk nipis dan sedikit garam, diamkan lima menit.",
+      "Haluskan kunyit, bawang putih, bawang merah, dan jahe.",
+      "Masukkan ayam, bumbu halus, garam, dan air ke dalam wajan.",
+      "Ungkep dengan api kecil hingga air habis dan ayam matang ke dalam.",
+      "Panaskan minyak banyak dengan api sedang.",
+      "Goreng ayam hingga permukaannya kering dan berwarna kuning kecokelatan.",
+      "Tiriskan, lalu sajikan bersama nasi hangat."
+    ],
+    "tags": ["makan-siang", "indonesian", "no-pork"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_012",
+    "name": "Mie Goreng Sayur",
+    "description": "Mie goreng dengan kol, wortel, dan telur yang bisa dimasak dari bahan sisa apa saja.",
+    "ingredients": [
+      { "name": "noodle", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "cabbage", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "soy_sauce", "required": true },
+      { "name": "salty_soy_sauce", "required": false },
+      { "name": "spring_onion", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 20,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Rebus mie hingga lunak, tiriskan, lalu lumuri sedikit minyak agar tidak lengket.",
+      "Iris kol dan wortel tipis memanjang, cincang bawang putih.",
+      "Tumis bawang putih hingga wangi, pecahkan telur, aduk hingga berbutir.",
+      "Masukkan wortel, tumis dua menit, lalu tambahkan kol.",
+      "Masukkan mie, tuang kecap manis dan kecap asin, bumbui garam.",
+      "Aduk hingga bumbu merata dan sayuran matang, taburi daun bawang, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "praktis", "hemat", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_013",
+    "name": "Sup Ayam Wortel Kentang",
+    "description": "Sup bening berisi ayam, wortel, dan kentang dengan kuah ringan yang menghangatkan.",
+    "ingredients": [
+      { "name": "chicken", "required": true },
+      { "name": "carrot", "required": true },
+      { "name": "potato", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "onion", "required": false },
+      { "name": "spring_onion", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": true },
+      { "name": "water", "required": true }
+    ],
+    "cookingTimeMinutes": 45,
+    "difficulty": "medium",
+    "servings": 4,
+    "steps": [
+      "Rebus ayam dalam air hingga mendidih, buang buih yang naik ke permukaan.",
+      "Kecilkan api, masak ayam hingga empuk dan kuah terasa gurih.",
+      "Potong wortel dan kentang menjadi kubus, cincang bawang putih, iris bawang bombay.",
+      "Tumis bawang putih dan bawang bombay hingga wangi, masukkan ke dalam kuah.",
+      "Masukkan kentang, masak hingga setengah lunak, lalu tambahkan wortel.",
+      "Bumbui garam dan lada, masak hingga semua sayuran lunak.",
+      "Taburi daun bawang, lalu sajikan panas."
+    ],
+    "tags": ["makan-malam", "berkuah", "sehat", "indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_014",
+    "name": "Tumis Jamur Saus Tiram",
+    "description": "Jamur tiram tumis saus tiram yang gurih dan juicy, matang dalam waktu singkat.",
+    "ingredients": [
+      { "name": "mushroom", "required": true },
+      { "name": "oyster_sauce", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "bird_eye_chili", "required": false },
+      { "name": "spring_onion", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": false },
+      { "name": "water", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 15,
+    "difficulty": "easy",
+    "servings": 2,
+    "steps": [
+      "Suwir jamur tiram, cuci, lalu peras agar airnya berkurang.",
+      "Cincang bawang putih dan iris cabai rawit.",
+      "Tumis bawang putih hingga wangi, masukkan cabai.",
+      "Masukkan jamur, aduk hingga jamur mengeluarkan air dan menyusut.",
+      "Tambahkan saus tiram, sedikit air, garam, dan lada.",
+      "Masak hingga kuah mengental dan membalut jamur, taburi daun bawang, lalu sajikan."
+    ],
+    "tags": ["makan-malam", "praktis", "vegetarian", "chinese-indonesian"],
+    "source": "original"
+  },
+  {
+    "id": "recipe_015",
+    "name": "Perkedel Kentang",
+    "description": "Perkedel kentang bertekstur lembut dengan tepi renyah, enak sebagai lauk atau camilan.",
+    "ingredients": [
+      { "name": "potato", "required": true },
+      { "name": "egg", "required": true },
+      { "name": "garlic", "required": true },
+      { "name": "shallot", "required": true },
+      { "name": "spring_onion", "required": false },
+      { "name": "salt", "required": true },
+      { "name": "pepper", "required": true },
+      { "name": "cooking_oil", "required": true }
+    ],
+    "cookingTimeMinutes": 40,
+    "difficulty": "medium",
+    "servings": 3,
+    "steps": [
+      "Kupas kentang, potong kecil, lalu goreng hingga matang dan lunak.",
+      "Haluskan kentang selagi hangat sampai tidak ada gumpalan besar.",
+      "Tumis bawang putih dan bawang merah cincang hingga wangi, campurkan ke kentang.",
+      "Masukkan irisan daun bawang, garam, dan lada, aduk hingga rata.",
+      "Bentuk adonan menjadi bulat pipih, padatkan agar tidak pecah saat digoreng.",
+      "Celupkan tiap perkedel ke kocokan telur.",
+      "Goreng dengan api sedang hingga kedua sisi kecokelatan, lalu tiriskan dan sajikan."
+    ],
+    "tags": ["makan-siang", "camilan", "vegetarian", "indonesian"],
+    "source": "original"
+  }
+]
