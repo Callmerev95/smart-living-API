@@ -495,14 +495,6 @@
     "category": "fruit",
     "staple": false
   },
-
-  {
-    "name": "tomato_sauce",
-    "displayName": "Saus Tomat",
-    "aliases": ["saus tomat"],
-    "category": "condiment",
-    "staple": false
-  },
   {
     "name": "sesame_oil",
     "displayName": "Minyak Wijen",
@@ -570,13 +562,6 @@
     "category": "grain",
     "staple": false
   },
-  {
-    "name": "glutinous_flour",
-    "displayName": "Tepung Ketan",
-    "aliases": ["tepung ketan"],
-    "category": "grain",
-    "staple": false
-  },
 
   {
     "name": "cumin",
@@ -627,6 +612,77 @@
     "displayName": "Kelapa Parut",
     "aliases": ["kelapa parut", "kelapa muda parut"],
     "category": "other",
+    "staple": false
+  },
+
+  {
+    "name": "jackfruit",
+    "displayName": "Nangka Muda",
+    "aliases": ["nangka muda", "gudeg", "jackfruit"],
+    "category": "fruit",
+    "staple": false
+  },
+  {
+    "name": "banana_leaf",
+    "displayName": "Daun Pisang",
+    "aliases": ["daun pisang"],
+    "category": "other",
+    "staple": false
+  },
+  {
+    "name": "petai",
+    "displayName": "Petai",
+    "aliases": ["petai", "petai segar"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "green_chili",
+    "displayName": "Cabai Hijau",
+    "aliases": ["cabai hijau", "cabe hijau"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "duck",
+    "displayName": "Bebek",
+    "aliases": ["bebek"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "snail",
+    "displayName": "Keong",
+    "aliases": ["keong", "tutut"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "cassava",
+    "displayName": "Singkong",
+    "aliases": ["singkong"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "steamed_rice_cake",
+    "displayName": "Lontong",
+    "aliases": ["lontong"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "chicken_liver",
+    "displayName": "Hati Ayam",
+    "aliases": ["hati ayam", "ati ayam", "ati"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "quail_egg",
+    "displayName": "Telur Puyuh",
+    "aliases": ["telur puyuh", "puyuh"],
+    "category": "protein",
     "staple": false
   }
 ]
