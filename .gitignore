@@ -1,14 +1,38 @@
-.venv
-__pycache__
-*.pyc
-node_modules
-.next
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Node
+node_modules/
+.next/
+out/
+.vite/
+*.tsbuildinfo
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Build
+dist/
+build/
+
+# Env
 .env
 .env.local
-*.egg-info
-dist
-build
-.vite
+.env.*.local
+
+# OS / editor
 .DS_Store
+Thumbs.db
 *.log
 *.sqlite3
