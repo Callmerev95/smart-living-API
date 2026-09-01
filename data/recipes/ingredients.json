@@ -1,0 +1,340 @@
+[
+  {
+    "name": "salt",
+    "displayName": "Garam",
+    "aliases": ["garam"],
+    "category": "staple",
+    "staple": true
+  },
+  {
+    "name": "cooking_oil",
+    "displayName": "Minyak Goreng",
+    "aliases": ["minyak", "minyak goreng", "oil", "vegetable oil"],
+    "category": "staple",
+    "staple": true
+  },
+  {
+    "name": "water",
+    "displayName": "Air",
+    "aliases": ["air"],
+    "category": "staple",
+    "staple": true
+  },
+  {
+    "name": "pepper",
+    "displayName": "Lada",
+    "aliases": ["lada", "merica", "lada hitam", "black pepper"],
+    "category": "staple",
+    "staple": true
+  },
+  {
+    "name": "sugar",
+    "displayName": "Gula",
+    "aliases": ["gula", "gula pasir"],
+    "category": "staple",
+    "staple": true
+  },
+
+  {
+    "name": "egg",
+    "displayName": "Telur",
+    "aliases": ["telur", "telor", "eggs", "butir telur", "telur ayam"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "chicken",
+    "displayName": "Ayam",
+    "aliases": [
+      "ayam",
+      "dada ayam",
+      "chicken breast",
+      "paha ayam",
+      "chicken thigh",
+      "ayam fillet",
+      "fillet ayam"
+    ],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "tofu",
+    "displayName": "Tahu",
+    "aliases": ["tahu", "tahu putih", "bean curd"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "tempeh",
+    "displayName": "Tempe",
+    "aliases": ["tempe", "tempe kedelai"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "beef",
+    "displayName": "Daging Sapi",
+    "aliases": ["daging sapi", "sapi", "daging giling", "ground beef"],
+    "category": "protein",
+    "staple": false
+  },
+  {
+    "name": "shrimp",
+    "displayName": "Udang",
+    "aliases": ["udang", "prawn", "prawns", "shrimps"],
+    "category": "protein",
+    "staple": false
+  },
+
+  {
+    "name": "carrot",
+    "displayName": "Wortel",
+    "aliases": ["wortel", "carrots"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "cabbage",
+    "displayName": "Kol",
+    "aliases": ["kol", "kubis", "kol putih"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "spinach",
+    "displayName": "Bayam",
+    "aliases": ["bayam"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "long_bean",
+    "displayName": "Kacang Panjang",
+    "aliases": ["kacang panjang"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "bean_sprouts",
+    "displayName": "Tauge",
+    "aliases": ["tauge", "taoge", "toge", "bean sprout"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "mushroom",
+    "displayName": "Jamur",
+    "aliases": ["jamur", "jamur tiram", "oyster mushroom"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "potato",
+    "displayName": "Kentang",
+    "aliases": ["kentang", "potatoes"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "corn",
+    "displayName": "Jagung",
+    "aliases": ["jagung", "jagung manis", "sweet corn"],
+    "category": "vegetable",
+    "staple": false
+  },
+  {
+    "name": "cucumber",
+    "displayName": "Timun",
+    "aliases": ["timun", "mentimun"],
+    "category": "vegetable",
+    "staple": false
+  },
+
+  {
+    "name": "tomato",
+    "displayName": "Tomat",
+    "aliases": ["tomat", "tomatoes"],
+    "category": "fruit",
+    "staple": false
+  },
+  {
+    "name": "lime",
+    "displayName": "Jeruk Nipis",
+    "aliases": ["jeruk nipis", "limau"],
+    "category": "fruit",
+    "staple": false
+  },
+
+  {
+    "name": "garlic",
+    "displayName": "Bawang Putih",
+    "aliases": ["bawang putih"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "shallot",
+    "displayName": "Bawang Merah",
+    "aliases": ["bawang merah"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "onion",
+    "displayName": "Bawang Bombay",
+    "aliases": ["bawang bombay", "bombay"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "chili",
+    "displayName": "Cabai Merah",
+    "aliases": ["cabai", "cabe", "cabai merah", "cabe merah", "chilli"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "bird_eye_chili",
+    "displayName": "Cabai Rawit",
+    "aliases": ["cabai rawit", "cabe rawit", "rawit"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "ginger",
+    "displayName": "Jahe",
+    "aliases": ["jahe"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "galangal",
+    "displayName": "Lengkuas",
+    "aliases": ["lengkuas", "laos"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "turmeric",
+    "displayName": "Kunyit",
+    "aliases": ["kunyit"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "lemongrass",
+    "displayName": "Serai",
+    "aliases": ["serai", "sereh"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "bay_leaf",
+    "displayName": "Daun Salam",
+    "aliases": ["daun salam", "salam"],
+    "category": "spice",
+    "staple": false
+  },
+  {
+    "name": "spring_onion",
+    "displayName": "Daun Bawang",
+    "aliases": ["daun bawang", "bawang daun", "scallion"],
+    "category": "spice",
+    "staple": false
+  },
+
+  {
+    "name": "soy_sauce",
+    "displayName": "Kecap Manis",
+    "aliases": ["kecap", "kecap manis", "sweet soy sauce"],
+    "category": "condiment",
+    "staple": false
+  },
+  {
+    "name": "salty_soy_sauce",
+    "displayName": "Kecap Asin",
+    "aliases": ["kecap asin", "light soy sauce"],
+    "category": "condiment",
+    "staple": false
+  },
+  {
+    "name": "oyster_sauce",
+    "displayName": "Saus Tiram",
+    "aliases": ["saus tiram", "oyster"],
+    "category": "condiment",
+    "staple": false
+  },
+  {
+    "name": "shrimp_paste",
+    "displayName": "Terasi",
+    "aliases": ["terasi", "belacan"],
+    "category": "condiment",
+    "staple": false
+  },
+  {
+    "name": "chili_sauce",
+    "displayName": "Saus Sambal",
+    "aliases": ["saus sambal", "sambal botol"],
+    "category": "condiment",
+    "staple": false
+  },
+
+  {
+    "name": "rice",
+    "displayName": "Nasi",
+    "aliases": ["nasi", "beras", "nasi putih", "white rice"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "noodle",
+    "displayName": "Mie",
+    "aliases": ["mie", "mi", "bakmi", "mie telur", "egg noodle"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "flour",
+    "displayName": "Tepung Terigu",
+    "aliases": ["tepung", "terigu", "tepung terigu", "all purpose flour"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "cornstarch",
+    "displayName": "Maizena",
+    "aliases": ["maizena", "tepung maizena", "corn starch"],
+    "category": "grain",
+    "staple": false
+  },
+  {
+    "name": "bread",
+    "displayName": "Roti",
+    "aliases": ["roti", "roti tawar", "white bread"],
+    "category": "grain",
+    "staple": false
+  },
+
+  {
+    "name": "milk",
+    "displayName": "Susu",
+    "aliases": ["susu", "susu cair", "fresh milk"],
+    "category": "dairy",
+    "staple": false
+  },
+  {
+    "name": "butter",
+    "displayName": "Mentega",
+    "aliases": ["mentega", "margarin"],
+    "category": "dairy",
+    "staple": false
+  },
+
+  {
+    "name": "coconut_milk",
+    "displayName": "Santan",
+    "aliases": ["santan", "coconut cream"],
+    "category": "other",
+    "staple": false
+  }
+]
