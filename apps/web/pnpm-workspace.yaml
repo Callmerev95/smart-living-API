@@ -1,3 +1,5 @@
+# Berkas setting pnpm 11 (bukan definisi workspace).
+# `allowBuilds` mencegah postinstall script berjalan tanpa persetujuan eksplisit.
 allowBuilds:
   sharp: false
   unrs-resolver: false
