@@ -13,8 +13,29 @@ from typing import Annotated
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
-# config.py -> core -> app -> api -> apps -> <repo root>
-REPO_ROOT = Path(__file__).resolve().parents[4]
+
+def _find_repo_root(config_file: Path) -> Path:
+    """Cari direktori yang memuat dataset, mulai dari lokasi file ini.
+
+    Menghitung jumlah tingkat secara kaku (`parents[4]`) hanya benar untuk layout
+    checkout dan meledak di dalam container Docker yang layout-nya lebih datar
+    (`/app/app/core/config.py`). Pencarian berbasis penanda `data/recipes`
+    bekerja untuk keduanya:
+
+    - checkout: ``<root>/apps/api/app/core/config.py`` -> ``<root>``
+    - image:    ``/app/app/core/config.py``            -> ``/app``
+    """
+    for candidate in config_file.resolve().parents:
+        if (candidate / "data" / "recipes").is_dir():
+            return candidate
+
+    # Dataset tidak ditemukan di ancestor mana pun. Kembalikan cwd agar error yang
+    # muncul nanti berasal dari repository (pesan jelas: file tidak ditemukan),
+    # bukan IndexError saat import.
+    return Path.cwd()
+
+
+REPO_ROOT = _find_repo_root(Path(__file__))
 
 
 class Settings(BaseSettings):

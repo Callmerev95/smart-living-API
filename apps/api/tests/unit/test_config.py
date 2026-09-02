@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from app.core.config import REPO_ROOT, Settings, get_settings
+from app.core.config import REPO_ROOT, Settings, _find_repo_root, get_settings
 
 
 @pytest.fixture
@@ -92,6 +92,64 @@ class TestPathResolution:
     ) -> None:
         monkeypatch.setenv("RECIPES_PATH", "/tmp/custom-recipes.json")
         assert _settings().recipes_path == Path("/tmp/custom-recipes.json")
+
+
+class TestFindRepoRoot:
+    """Pencarian root harus bekerja untuk layout checkout maupun image Docker.
+
+    Sebelumnya root dihitung dengan `parents[4]` yang meledak (`IndexError`) di
+    dalam container karena layout-nya lebih datar — dan itu terjadi saat import,
+    sehingga server gagal start sebelum sempat membaca env var.
+    """
+
+    def test_checkout_layout(self, tmp_path: Path) -> None:
+        root = tmp_path / "repo"
+        config_file = root / "apps" / "api" / "app" / "core" / "config.py"
+        config_file.parent.mkdir(parents=True)
+        config_file.touch()
+        (root / "data" / "recipes").mkdir(parents=True)
+
+        assert _find_repo_root(config_file) == root.resolve()
+
+    def test_docker_flat_layout(self, tmp_path: Path) -> None:
+        """`/app/app/core/config.py` dengan dataset di `/app/data/recipes`."""
+        root = tmp_path / "app"
+        config_file = root / "app" / "core" / "config.py"
+        config_file.parent.mkdir(parents=True)
+        config_file.touch()
+        (root / "data" / "recipes").mkdir(parents=True)
+
+        assert _find_repo_root(config_file) == root.resolve()
+
+    def test_shallow_path_does_not_raise(self, tmp_path: Path) -> None:
+        """Path dengan sedikit ancestor tidak boleh menimbulkan IndexError."""
+        config_file = tmp_path / "config.py"
+        config_file.touch()
+
+        assert _find_repo_root(config_file) == Path.cwd()
+
+    def test_falls_back_to_cwd_without_dataset(self, tmp_path: Path) -> None:
+        config_file = tmp_path / "a" / "b" / "config.py"
+        config_file.parent.mkdir(parents=True)
+        config_file.touch()
+
+        assert _find_repo_root(config_file) == Path.cwd()
+
+    def test_nearest_ancestor_wins(self, tmp_path: Path) -> None:
+        """Bila ada dua kandidat, yang terdekat dari config.py yang dipakai."""
+        outer = tmp_path / "outer"
+        inner = outer / "inner"
+        config_file = inner / "app" / "core" / "config.py"
+        config_file.parent.mkdir(parents=True)
+        config_file.touch()
+        (outer / "data" / "recipes").mkdir(parents=True)
+        (inner / "data" / "recipes").mkdir(parents=True)
+
+        assert _find_repo_root(config_file) == inner.resolve()
+
+    def test_module_level_root_points_at_real_dataset(self) -> None:
+        """REPO_ROOT hasil pencarian harus benar-benar memuat dataset."""
+        assert (REPO_ROOT / "data" / "recipes" / "recipes.json").is_file()
 
 
 class TestSingleton:
