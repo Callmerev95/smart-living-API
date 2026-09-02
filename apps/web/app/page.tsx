@@ -1,12 +1,42 @@
+"use client";
+
+import { useState } from "react";
+
+import { HeroSection } from "@/components/HeroSection";
+import { IngredientInput } from "@/components/ingredients/IngredientInput";
+import { RecommendationSection } from "@/components/recommendations/RecommendationSection";
+import { useRecommendations } from "@/hooks/useRecommendations";
+
+/**
+ * Halaman utama — hanya komposisi dan wiring state
+ * (`docs/component-architecture.md` §5.1). Tidak ada algoritma di sini.
+ */
 export default function Home() {
+  const { status, state, submit, reset } = useRecommendations();
+  const [lastIngredients, setLastIngredients] = useState<string[]>([]);
+
+  function handleSubmit(ingredients: string[]) {
+    setLastIngredients(ingredients);
+    void submit(ingredients);
+  }
+
+  function handleRetry() {
+    if (lastIngredients.length > 0) {
+      void submit(lastIngredients);
+      return;
+    }
+    reset();
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-center py-32 px-16">
-        <h1 className="text-3xl font-semibold">Smart Living</h1>
-        <p className="text-lg text-zinc-600 mt-2">
-          Masak dari bahan yang sudah ada.
-        </p>
-      </main>
-    </div>
-  )
+    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-12">
+      <HeroSection />
+      <IngredientInput onSubmit={handleSubmit} loading={status === "loading"} />
+      <RecommendationSection
+        status={status}
+        data={state.status === "success" ? state.data : undefined}
+        onRetry={handleRetry}
+      />
+    </main>
+  );
 }

@@ -93,7 +93,7 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
         </div>
 
         <div className="flex gap-2 sm:pt-7">
-          <Button type="submit" loading={loading} onClick={() => handleSubmit()}>
+          <Button type="submit" loading={loading}>
             {loading ? content.input.submitLoading : content.input.submit}
           </Button>
           {value.length > 0 && (
