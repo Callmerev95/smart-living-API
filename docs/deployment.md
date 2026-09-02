@@ -1,17 +1,41 @@
 # Panduan Deployment
 
-Web ke **Vercel**, API ke **Railway** lewat Dockerfile.
+Web ke **Vercel**, API ke **Hugging Face Spaces** lewat Dockerfile.
 
-Pemilihan platform sengaja dipisah: Vercel memberi edge network dan preview deployment
-untuk Next.js, sementara Railway menjalankan `docker/api.Dockerfile` yang sama dengan yang
-diverifikasi CI. Dockerfile-nya bukan pajangan — ia yang menjalankan API production.
+---
+
+## Mengapa platform ini
+
+Kebutuhannya sempit: satu container Python stateless, dataset 96 KB read-only, dan biaya
+yang berkelanjutan untuk proyek portfolio.
+
+| Platform | Docker | Biaya | Kartu kredit | Keputusan |
+|---|---|---|---|---|
+| **Hugging Face Spaces** | Ya | Gratis permanen | **Tidak perlu** | **Dipilih** |
+| Railway | Ya | Trial $5 / 30 hari, lalu berbayar | Perlu | Trial berbatas waktu |
+| Koyeb | Ya | Mulai $29/bulan | Perlu | Tidak ada free tier |
+| Google Cloud Run | Ya | Gratis dalam kuota | Perlu | Butuh kartu kredit |
+| Fly.io | Ya | ~$0,05/bulan dengan auto-stop | Perlu | Butuh kartu kredit |
+| Render | Ya | Free tier | Tidak perlu | Cold start ~50 detik |
+| Cloudflare Workers | **Tidak** | Gratis | Tidak perlu | Pyodide/WASM, bukan container |
+
+Hugging Face Spaces adalah satu-satunya yang memenuhi tiga syarat sekaligus: mendukung
+Docker, gratis permanen (bukan trial), dan tidak meminta kartu kredit.
+
+Konsekuensi yang diterima: Space gratis tidur setelah beberapa waktu tidak diakses, dan
+URL-nya berbentuk `<user>-<space>.hf.space`. Untuk demo portfolio, kedua hal itu dapat
+diterima.
+
+Cloudflare Workers sengaja dilewati meski gratis: ia menjalankan Python di Pyodide/WASM,
+bukan container. Memakainya berarti `docker/api.Dockerfile` tidak lagi dipakai di
+production — kehilangan alasan utama proyek ini memakai Docker.
 
 ---
 
 ## Urutan penting
 
 `NEXT_PUBLIC_API_BASE_URL` **dibakar saat build**, bukan dibaca saat runtime. URL API
-harus sudah diketahui sebelum web di-build. Karena itu urutannya:
+harus sudah diketahui sebelum web di-build:
 
 ```
 1. Deploy API          →  dapatkan URL API
@@ -24,55 +48,101 @@ Membalik langkah 1 dan 2 berarti web perlu di-build dua kali.
 
 ---
 
-## Langkah 1 — Deploy API ke Railway
+## Langkah 1 — Deploy API ke Hugging Face Spaces
 
-### 1.1 Buat service
+### 1.1 Cara sinkronisasi
 
-1. Buka [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**
-2. Pilih repository `smart-living-API`
-3. Railway akan membuat satu service
+HF Spaces punya dua batasan yang memengaruhi struktur:
 
-### 1.2 Arahkan ke Dockerfile
+- Hanya membaca `Dockerfile` di root repo Space — tidak ada opsi path seperti platform lain.
+- Konfigurasi Space berada di YAML front matter `README.md`.
 
-Buka **Settings** service, atur:
+Keduanya bertabrakan dengan repo ini: Dockerfile berada di `docker/api.Dockerfile`
+(karena build context-nya root repo, agar `data/recipes/` bisa di-`COPY`), dan `README.md`
+sudah dipakai sebagai dokumentasi portfolio.
 
-| Setting | Nilai | Alasan |
-|---|---|---|
-| Root Directory | `/` (root repo) | Image butuh `data/recipes/` yang ada di luar `apps/api/` |
-| Builder | `Dockerfile` | |
-| Dockerfile Path | `docker/api.Dockerfile` | |
-
-> **Jangan** set Root Directory ke `apps/api`. Build context harus root repo, kalau tidak
-> `COPY data/recipes` gagal.
-
-### 1.3 Set environment variable
-
-Buka tab **Variables**:
-
-| Variabel | Nilai awal | Keterangan |
-|---|---|---|
-| `CORS_ORIGINS` | `http://localhost:3000` | Diperbarui di langkah 3 |
-| `LOG_LEVEL` | `INFO` | |
-
-Yang **tidak perlu** diset — sudah ada default di `docker/api.Dockerfile` atau
-`app/core/config.py`:
-
-- `PORT` — disuntikkan Railway otomatis, dan `CMD` sudah membacanya
-- `RECIPES_PATH`, `INGREDIENTS_PATH` — sudah absolut di Dockerfile
-- `DEFAULT_LIMIT`, `MAX_LIMIT`, `MIN_MATCH_THRESHOLD` — default sudah sesuai kontrak
-
-### 1.4 Aktifkan domain publik
-
-**Settings → Networking → Generate Domain**. Catat URL-nya, misalnya:
+Solusinya: workflow `.github/workflows/deploy-hf.yml` menyiapkan *staging directory* yang
+**meniru struktur repo**, lalu mem-push-nya ke Space.
 
 ```
-https://smart-living-api-production.up.railway.app
+staging/
+├── Dockerfile            ← salinan docker/api.Dockerfile, TIDAK diubah
+├── README.md             ← dari docker/hf-space-README.md (front matter YAML)
+├── apps/api/
+│   ├── app/
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── .python-version
+└── data/recipes/
 ```
 
-### 1.5 Verifikasi
+Karena path di dalam staging identik dengan yang dirujuk Dockerfile, image yang dibangun
+HF **sama persis** dengan yang diverifikasi CI lewat `docker compose`. Tidak ada Dockerfile
+versi kedua yang bisa menyimpang.
+
+Sinkronisasi berjalan otomatis setiap kali workflow `CI` sukses di branch `main`. Kode
+yang gagal test tidak akan pernah sampai ke production.
+
+### 1.2 Buat Space
+
+1. Buka [huggingface.co/new-space](https://huggingface.co/new-space)
+2. **Space name**: `smart-living-api`
+3. **SDK**: pilih **Docker** → template **Blank**
+4. **Visibility**: Public
+5. **Create Space**
+
+Space akan kosong — itu normal, isinya datang dari CI.
+
+### 1.3 Siapkan token
+
+1. HF → **Settings** → **Access Tokens** → **New token**
+2. Nama bebas (mis. `github-actions`), **Role: Write**
+3. Copy token
+
+Lalu di GitHub:
+
+1. Repo → **Settings** → **Secrets and variables** → **Actions**
+2. **New repository secret**: nama `HF_TOKEN`, isi token tadi
+
+Tanpa secret ini workflow akan gagal dengan pesan yang jelas, bukan error yang
+membingungkan.
+
+### 1.4 Trigger deploy pertama
+
+Dua cara:
+
+- **Otomatis**: push apa pun ke `main`. Setelah CI hijau, `deploy-hf` berjalan sendiri.
+- **Manual**: GitHub → tab **Actions** → **Deploy API to Hugging Face Spaces** → **Run workflow**.
+
+### 1.5 Pantau build
+
+Buka halaman Space → tab **Logs**.
+
+| Tab | Yang dicari |
+|---|---|
+| **Build** | `Pushing Image`, lalu `Scheduling Space` |
+| **Container** | `Uvicorn running on http://0.0.0.0:8000` |
+
+Build pertama memakan 2–4 menit (multi-stage + `uv sync`). Build berikutnya lebih cepat
+karena layer dependency ter-cache.
+
+### 1.6 Set variable
+
+Space → **Settings** → **Variables and secrets** → **New variable**:
+
+| Variabel | Nilai awal |
+|---|---|
+| `CORS_ORIGINS` | `http://localhost:3000` |
+
+Diperbarui di langkah 3 setelah domain Vercel diketahui.
+
+Yang **tidak perlu** diset — sudah ada default di Dockerfile atau `app/core/config.py`:
+`RECIPES_PATH`, `INGREDIENTS_PATH`, `DEFAULT_LIMIT`, `MAX_LIMIT`, `MIN_MATCH_THRESHOLD`.
+
+### 1.7 Verifikasi
 
 ```bash
-curl https://<URL_API_RAILWAY>/api/v1/health
+curl https://callmerev95-smart-living-api.hf.space/api/v1/health
 ```
 
 Harus mengembalikan:
@@ -81,8 +151,10 @@ Harus mengembalikan:
 {"status":"ok","recipeCount":60,"ingredientCount":94}
 ```
 
-`recipeCount: 60` membuktikan dataset benar-benar ter-load di dalam image — bukan hanya
-"API merespons".
+Angka `60` yang penting — ia membuktikan dataset benar-benar ada di dalam image, bukan
+hanya bahwa API merespons.
+
+Dokumentasi interaktif: `https://callmerev95-smart-living-api.hf.space/docs`
 
 ---
 
@@ -106,50 +178,53 @@ Vercel membaca `packageManager` di `package.json` dan memakai pnpm 11.24.0 otoma
 
 ### 2.3 Environment variable
 
-**Environment Variables**, untuk semua environment (Production, Preview, Development):
+**Sebelum** klik Deploy, tambahkan untuk semua environment (Production, Preview,
+Development):
 
 | Variabel | Nilai |
 |---|---|
-| `NEXT_PUBLIC_API_BASE_URL` | URL API dari langkah 1.4, **tanpa trailing slash** |
+| `NEXT_PUBLIC_API_BASE_URL` | `https://callmerev95-smart-living-api.hf.space` |
 
-Contoh: `https://smart-living-api-production.up.railway.app`
+Tanpa trailing slash. Kalau variabel ini ditambahkan setelah deploy pertama, aplikasi akan
+build sukses tapi gagal saat dipakai — nilainya dibakar ke bundle, jadi butuh **redeploy**,
+bukan restart.
 
 ### 2.4 Deploy & catat domain
 
-Setelah deploy sukses, catat domain-nya, misalnya:
+Setelah deploy sukses, catat domainnya, misalnya:
 
 ```
-https://smart-living-api-web.vercel.app
+https://smart-living-api.vercel.app
 ```
 
-Pada tahap ini web sudah hidup tapi **request ke API akan gagal karena CORS** — itu
-diperbaiki di langkah berikutnya.
+Pada tahap ini web sudah hidup tapi request ke API masih gagal karena CORS — diperbaiki di
+langkah berikutnya.
 
 ---
 
-## Langkah 3 — Update CORS di Railway
+## Langkah 3 — Update CORS di Space
 
-Kembali ke Railway → service API → **Variables**:
-
-```
-CORS_ORIGINS = https://smart-living-api-web.vercel.app
-```
-
-Railway akan redeploy otomatis.
-
-### Bila ingin mengizinkan preview deployment Vercel
-
-Vercel membuat domain unik per pull request. Untuk mengizinkannya, tambahkan domain yang
-diperlukan dipisah koma:
+Space → **Settings** → **Variables and secrets** → ubah `CORS_ORIGINS`:
 
 ```
-CORS_ORIGINS = https://smart-living-api-web.vercel.app,https://smart-living-api-web-git-dev.vercel.app
+CORS_ORIGINS = https://smart-living-api.vercel.app
+```
+
+Space akan restart otomatis (~30 detik).
+
+### Mengizinkan preview deployment Vercel
+
+Vercel membuat domain unik per pull request. Tambahkan domain yang diperlukan, dipisah
+koma:
+
+```
+CORS_ORIGINS = https://smart-living-api.vercel.app,https://smart-living-api-git-dev.vercel.app
 ```
 
 `CORS_ORIGINS` menerima format comma-separated maupun JSON array.
 
-> **Jangan pakai `*`.** Konfigurasi CORS yang terbuka membuat API bisa dipanggil dari
-> situs mana pun. Aturan ini juga tercatat sebagai larangan eksplisit di
+> **Jangan pakai `*`.** Konfigurasi CORS terbuka membuat API bisa dipanggil dari situs mana
+> pun. Aturan ini tercatat sebagai larangan eksplisit di
 > `docs/technical-architecture.md` §17.
 
 ---
@@ -159,22 +234,25 @@ CORS_ORIGINS = https://smart-living-api-web.vercel.app,https://smart-living-api-
 ### 4.1 API
 
 ```bash
+API=https://callmerev95-smart-living-api.hf.space
+WEB=https://smart-living-api.vercel.app
+
 # Health + dataset
-curl https://<URL_API>/api/v1/health
+curl -fsS "$API/api/v1/health"
 
 # Rekomendasi
-curl -X POST https://<URL_API>/api/v1/recommendations \
+curl -fsS -X POST "$API/api/v1/recommendations" \
   -H "Content-Type: application/json" \
   -d '{"ingredients":["telur","ayam","wortel"]}'
 
 # CORS preflight dari domain web
-curl -i -X OPTIONS https://<URL_API>/api/v1/recommendations \
-  -H "Origin: https://<DOMAIN_WEB>" \
+curl -i -X OPTIONS "$API/api/v1/recommendations" \
+  -H "Origin: $WEB" \
   -H "Access-Control-Request-Method: POST" \
   -H "Access-Control-Request-Headers: content-type"
 ```
 
-Preflight harus mengembalikan `access-control-allow-origin` yang berisi domain web.
+Preflight harus mengembalikan header `access-control-allow-origin` berisi domain web.
 
 ### 4.2 Web
 
@@ -191,11 +269,13 @@ Buka domain Vercel dan lalui alur:
 
 Periksa sebelum membagikan link demo:
 
-- [ ] HTTPS aktif di kedua domain (Railway dan Vercel menyediakannya otomatis)
+- [ ] HTTPS aktif di kedua domain (HF dan Vercel menyediakannya otomatis)
 - [ ] `CORS_ORIGINS` berisi domain web saja — **bukan** `*`
 - [ ] Tidak ada `.env` ter-commit: `git ls-files | grep -E "^\.env$|\.env\.local$"` harus kosong
 - [ ] Bundle client tidak memuat secret — hanya variabel `NEXT_PUBLIC_*` yang sampai ke browser
-- [ ] Response error tidak memuat stack trace: picu `curl -X POST <API>/api/v1/recommendations -d '{}' -H "Content-Type: application/json"` dan pastikan hanya ada `{"error": {...}}`
+- [ ] Response error tidak memuat stack trace:
+      `curl -X POST "$API/api/v1/recommendations" -H "Content-Type: application/json" -d '{}'`
+      harus hanya berisi `{"error": {...}}`
 - [ ] Header `X-Request-ID` ada di response — untuk korelasi log
 
 ---
@@ -205,43 +285,77 @@ Periksa sebelum membagikan link demo:
 Ganti baris demo di `README.md`:
 
 ```markdown
-| **Demo** | https://<DOMAIN_WEB> |
-| **API Docs** | https://<URL_API>/docs |
+| **Demo** | https://smart-living-api.vercel.app |
+| **API Docs** | https://callmerev95-smart-living-api.hf.space/docs |
 ```
+
+---
+
+## Keterbatasan Space gratis
+
+**Space tidur setelah beberapa waktu tidak diakses.** Request pertama setelah bangun
+memerlukan beberapa detik, dan berpotensi mengembalikan halaman loading HTML alih-alih
+JSON.
+
+Penanganan error yang sudah ada menurunkan dampaknya: bila response bukan JSON,
+`lib/api/client.ts` melempar `UNKNOWN_ERROR` dan UI menampilkan pesan beserta tombol
+"Coba lagi". Klik retry setelah Space bangun akan berhasil — tidak ada crash.
+
+Bila di kemudian hari ini terasa mengganggu, ada tiga opsi:
+
+| Opsi | Konsekuensi |
+|---|---|
+| Terima sebagai keterbatasan | Nol perubahan kode; reviewer mungkin perlu refresh sekali |
+| Retry otomatis di API client | Demo mulus, tapi menambah kode yang hanya melayani demo |
+| Cron ping `/api/v1/health` | Space tetap bangun, tapi mengakali batasan platform dan memakai kuota Actions |
 
 ---
 
 ## Troubleshooting
 
-### API: build gagal di Railway
+### Workflow gagal: `Secret HF_TOKEN belum diset`
 
-Cek Root Directory. Harus `/`, bukan `apps/api` — `docker/api.Dockerfile` melakukan
-`COPY data/recipes` yang hanya tersedia bila context-nya root repo.
+Buat token dengan role **Write** di HF Settings → Access Tokens, lalu tambahkan sebagai
+repository secret bernama `HF_TOKEN` di GitHub.
 
-### API: container start lalu mati
+### Workflow gagal saat push: `Authentication failed`
 
-Lihat deploy log. Penyebab yang pernah terjadi: dataset tidak ditemukan. Verifikasi
-`RECIPES_PATH` dan `INGREDIENTS_PATH` — di image keduanya sudah diset absolut ke
-`/app/data/recipes/`, jadi jangan di-override kecuali memang perlu.
+Token kedaluwarsa atau role-nya **Read** alih-alih **Write**. Buat token baru dan perbarui
+secret.
 
-### Web: request ke API gagal dengan CORS error
+### HF build gagal: `COPY failed: no source files`
+
+Struktur staging tidak cocok dengan yang dirujuk Dockerfile. Workflow punya step
+"Verifikasi isi staging" yang seharusnya menangkap ini lebih dulu — periksa log step
+tersebut.
+
+### Space status `Runtime error`, container mati
+
+Buka tab **Container** di Logs. Penyebab yang mungkin: dataset tidak ditemukan. Verifikasi
+`RECIPES_PATH` dan `INGREDIENTS_PATH` — keduanya sudah diset absolut di Dockerfile
+(`/app/data/recipes/`), jadi jangan di-override kecuali memang perlu.
+
+### Space menampilkan halaman HTML, bukan JSON
+
+Space sedang bangun dari tidur. Tunggu beberapa detik dan coba lagi.
+
+### Web: CORS error di browser
 
 Tiga hal yang perlu dicek:
 
-1. `CORS_ORIGINS` di Railway sudah berisi domain Vercel (persis, termasuk `https://`)
+1. `CORS_ORIGINS` di Space sudah berisi domain Vercel — persis, termasuk `https://`
 2. Tidak ada trailing slash di `NEXT_PUBLIC_API_BASE_URL`
-3. Railway sudah selesai redeploy setelah variabel diubah
+3. Space sudah selesai restart setelah variabel diubah
 
 ### Web: memanggil `localhost:8000` di production
 
 `NEXT_PUBLIC_API_BASE_URL` belum diset saat build, atau diset setelah build berjalan.
-Variabel ini dibakar ke bundle — **redeploy** diperlukan setelah mengubahnya, bukan
-sekadar restart.
+Variabel ini dibakar ke bundle — lakukan **redeploy**, bukan sekadar restart.
 
 ### Web: build gagal dengan `ERR_PNPM_IGNORED_BUILDS`
 
-`apps/web/pnpm-workspace.yaml` tidak terbaca. File itu menyimpan setting `allowBuilds`
-dan harus ada di Root Directory yang dikonfigurasi (`apps/web`).
+`apps/web/pnpm-workspace.yaml` tidak terbaca. File itu menyimpan setting `allowBuilds` dan
+harus ada di Root Directory yang dikonfigurasi (`apps/web`).
 
 ---
 
@@ -273,7 +387,7 @@ docker compose up --build
 
 Build image juga diverifikasi otomatis di CI (job `docker`): kedua image dibangun,
 dijalankan, lalu di-smoke test. Kalau Dockerfile rusak, CI merah sebelum sampai
-production.
+production — dan `deploy-hf` tidak akan berjalan karena ia menunggu CI sukses.
 
 ---
 
@@ -284,5 +398,7 @@ production.
 | [`../README.md`](../README.md) | Cara menjalankan lokal, contoh API |
 | [`technical-architecture.md`](technical-architecture.md) | §17 keamanan, §23 strategi Docker, §25 arsitektur deployment |
 | [`../docker-compose.yml`](../docker-compose.yml) | Orkestrasi lokal |
-| [`../docker/api.Dockerfile`](../docker/api.Dockerfile) | Image API — dipakai Railway |
+| [`../docker/api.Dockerfile`](../docker/api.Dockerfile) | Image API — dipakai HF Spaces |
 | [`../docker/web.Dockerfile`](../docker/web.Dockerfile) | Image web — dipakai compose & CI |
+| [`../docker/hf-space-README.md`](../docker/hf-space-README.md) | README + front matter untuk Space |
+| [`../.github/workflows/deploy-hf.yml`](../.github/workflows/deploy-hf.yml) | Workflow sinkronisasi |

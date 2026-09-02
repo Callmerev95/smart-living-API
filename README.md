@@ -493,18 +493,25 @@ kasus pembulatan yang menjaganya.
 
 ## Deployment
 
-Web ke Vercel, API ke Railway lewat Dockerfile. Panduan lengkap beserta urutan langkah
-dan checklist keamanan: **[`docs/deployment.md`](docs/deployment.md)**.
+Web ke **Vercel**, API ke **Hugging Face Spaces** lewat Dockerfile. Panduan lengkap
+beserta perbandingan platform, urutan langkah, dan checklist keamanan:
+**[`docs/deployment.md`](docs/deployment.md)**.
 
 Ringkasnya:
 
-1. Deploy API ke Railway (`docker/api.Dockerfile`), catat URL-nya.
-2. Deploy web ke Vercel dengan `NEXT_PUBLIC_API_BASE_URL` = URL API tadi.
-3. Set `CORS_ORIGINS` di Railway ke domain Vercel — **bukan** `*`.
+1. Deploy API ke HF Spaces — disinkronkan otomatis oleh
+   [`.github/workflows/deploy-hf.yml`](.github/workflows/deploy-hf.yml) setiap kali CI
+   hijau di `main`.
+2. Deploy web ke Vercel dengan `NEXT_PUBLIC_API_BASE_URL` = URL API.
+3. Set `CORS_ORIGINS` di Space ke domain Vercel — **bukan** `*`.
 4. Uji alur end-to-end di production.
 
 Urutannya penting: `NEXT_PUBLIC_API_BASE_URL` dibakar saat build, jadi URL API harus
 sudah diketahui sebelum web di-build.
+
+HF Spaces dipilih karena mendukung Docker, gratis permanen, dan tidak meminta kartu
+kredit. `docker/api.Dockerfile` yang sama dipakai untuk compose lokal, verifikasi CI, dan
+production — bukan tiga file berbeda yang bisa saling menyimpang.
 
 ---
 
@@ -536,7 +543,7 @@ Daftar ini sengaja jujur — batas cakupan adalah bagian dari keputusan produk.
 | [`docs/development-roadmap.md`](docs/development-roadmap.md) | Urutan fase dan exit criteria |
 | [`docs/implementation-task-breakdown.md`](docs/implementation-task-breakdown.md) | 84 task dengan acceptance criteria |
 | [`docs/case-study.md`](docs/case-study.md) | Narasi produk: masalah, insight, trade-off |
-| [`docs/deployment.md`](docs/deployment.md) | Panduan deploy Railway + Vercel |
+| [`docs/deployment.md`](docs/deployment.md) | Panduan deploy HF Spaces + Vercel |
 | [`AGENTS.md`](AGENTS.md) | Operating manual untuk kontributor & AI agent |
 
 ---

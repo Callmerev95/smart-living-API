@@ -44,9 +44,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ------------------------------------------------------------------------------
 FROM python:3.12-slim-bookworm@sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254
 
-# Container tidak boleh berjalan sebagai root.
-RUN groupadd --system --gid 999 nonroot \
-    && useradd --system --gid 999 --uid 999 --create-home nonroot
+# Container tidak boleh berjalan sebagai root. UID/GID 1000 dipilih agar cocok
+# dengan Hugging Face Spaces yang menjalankan container sebagai UID 1000 —
+# menyamakannya mencegah masalah kepemilikan file.
+RUN groupadd --system --gid 1000 nonroot \
+    && useradd --system --gid 1000 --uid 1000 --create-home nonroot
 
 WORKDIR /app
 
