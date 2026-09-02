@@ -120,6 +120,63 @@ export const content = {
     repoLabel: "Lihat di GitHub",
   },
 
+  showcase: {
+    heading: "Di balik layar",
+    subheading: "Frontend ini hanya salah satu client dari Smart Living API.",
+    requestHeading: "Contoh Request",
+    responseHeading: "Contoh Response",
+    architectureHeading: "Arsitektur",
+    stackHeading: "Tech Stack",
+    decisionsHeading: "Keputusan Teknis",
+    docsLabel: "Buka dokumentasi OpenAPI",
+    copyLabel: "Copy",
+    copiedLabel: "Tersalin",
+    diagramAlt:
+      "Alur permintaan: browser memanggil Next.js, Next.js memanggil Smart Living API, " +
+      "API menormalisasi bahan lalu menghitung kecocokan dan mengurutkan hasil, " +
+      "data resep dibaca dari berkas JSON lewat repository.",
+    diagramFlow: [
+      { label: "Browser", note: "Input bahan dari pengguna" },
+      { label: "Next.js (Web)", note: "Client API, bukan tempat business logic" },
+      { label: "Smart Living API (FastAPI)", note: "Validasi request dan response" },
+      { label: "Ingredient Normalizer", note: "Teks bebas menjadi nama kanonik" },
+      { label: "Matching Engine", note: "Hitung persentase kecocokan" },
+      { label: "Ranking", note: "Urutkan deterministik dengan tie-breaker" },
+      { label: "Recipe Repository", note: "Baca recipes.json sekali saat startup" },
+    ],
+    stack: [
+      { layer: "Frontend", items: "Next.js, TypeScript, Tailwind CSS" },
+      { layer: "Backend", items: "Python 3.12, FastAPI, Pydantic v2" },
+      { layer: "Data", items: "JSON (version-controlled), PostgreSQL-ready" },
+      { layer: "Testing", items: "pytest, Vitest, Playwright" },
+      { layer: "Tooling", items: "uv, pnpm, ruff, Docker, GitHub Actions" },
+    ],
+    decisions: [
+      {
+        title: "Kenapa deterministik, bukan LLM?",
+        body:
+          "Ranking resep harus konsisten, murah, dan bisa dijelaskan. Input yang sama " +
+          "selalu menghasilkan urutan yang sama. AI ditempatkan sebagai lapisan " +
+          "enhancement, bukan fondasi. Trade-off-nya: input bahasa natural yang rumit " +
+          "belum bisa dipahami.",
+      },
+      {
+        title: "Kenapa garam dan minyak tidak dihitung?",
+        body:
+          "Bahan pokok dapur dianggap selalu tersedia, sehingga persentase kecocokan " +
+          "mencerminkan bahan yang benar-benar menentukan. Trade-off-nya: asumsi ini " +
+          "bisa salah untuk dapur yang benar-benar kosong.",
+      },
+      {
+        title: "Kenapa JSON, bukan database?",
+        body:
+          "Untuk 60 resep, JSON version-controlled lebih cepat di-review dan tidak butuh " +
+          "setup. Repository abstraction membuat migrasi ke PostgreSQL tidak mengubah " +
+          "business logic. Trade-off-nya: query kompleks dan filter dinamis belum bisa.",
+      },
+    ],
+  },
+
   meta: {
     title: "Smart Living — Masak dari bahan yang sudah ada",
     description:

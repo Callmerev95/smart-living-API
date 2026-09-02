@@ -5,6 +5,7 @@ import { useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { IngredientInput } from "@/components/ingredients/IngredientInput";
 import { RecommendationSection } from "@/components/recommendations/RecommendationSection";
+import { ApiShowcase } from "@/components/showcase/ApiShowcase";
 import { useIngredients } from "@/hooks/useIngredients";
 import { useRecommendations } from "@/hooks/useRecommendations";
 
@@ -40,6 +41,7 @@ export default function Home() {
         displayNames={displayNames}
         onRetry={handleRetry}
       />
+      <ApiShowcase />
     </main>
   );
 }
