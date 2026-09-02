@@ -21,7 +21,11 @@ RUN corepack enable
 
 WORKDIR /app
 
+# `pnpm-workspace.yaml` wajib ikut ter-mount: di situ tersimpan setting
+# `allowBuilds`. Tanpa file itu pnpm 11 menolak instalasi dengan
+# ERR_PNPM_IGNORED_BUILDS ketika ada dependency yang punya postinstall script.
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+    --mount=type=bind,source=apps/web/pnpm-workspace.yaml,target=pnpm-workspace.yaml \
     --mount=type=bind,source=apps/web/package.json,target=package.json \
     --mount=type=bind,source=apps/web/pnpm-lock.yaml,target=pnpm-lock.yaml \
     pnpm install --frozen-lockfile
