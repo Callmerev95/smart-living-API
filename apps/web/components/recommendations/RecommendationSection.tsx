@@ -7,28 +7,31 @@ import type { Recommendation, RecommendationResponse } from "@/types/api";
 import { content, fill } from "@/lib/constants/content";
 
 function NormalizedIngredientChips({ data }: { data: RecommendationResponse }) {
-  const known = data.query.ingredients;
-  const raw = data.query.raw;
-  const knownChips = known.map((canonical, index) => {
-    const rawValue = raw[index] ?? canonical;
-    return (
-      <IngredientTag
-        key={`known-${canonical}`}
-        variant={rawValue.toLowerCase() === canonical ? "plain" : "normalized"}
-        {...(rawValue.toLowerCase() === canonical
-          ? { displayName: canonical }
-          : { raw: rawValue, displayName: canonical })}
-      />
-    );
-  });
-  const unknownChips = data.unknownIngredients.map((value) => (
-    <IngredientTag key={`unknown-${value}`} variant="unknown" raw={value} />
-  ));
+  const { ingredients: known, raw } = data.query;
 
   return (
     <div className="flex flex-wrap gap-2" aria-label="Bahan yang dicari">
-      {knownChips}
-      {unknownChips}
+      {known.map((canonical, index) => {
+        const rawValue = raw[index] ?? canonical;
+
+        if (rawValue.toLowerCase() === canonical.toLowerCase()) {
+          return (
+            <IngredientTag key={`known-${canonical}`} variant="plain" displayName={canonical} />
+          );
+        }
+
+        return (
+          <IngredientTag
+            key={`known-${canonical}`}
+            variant="normalized"
+            raw={rawValue}
+            displayName={canonical}
+          />
+        );
+      })}
+      {data.unknownIngredients.map((value) => (
+        <IngredientTag key={`unknown-${value}`} variant="unknown" raw={value} />
+      ))}
     </div>
   );
 }
@@ -46,7 +49,6 @@ export function RecommendationList({ results }: { results: Recommendation[] }) {
 type RecommendationSectionProps = {
   status: "idle" | "loading" | "success" | "error";
   data?: RecommendationResponse;
-  errorMessage?: string;
   onRetry: () => void;
 };
 
@@ -54,7 +56,6 @@ type RecommendationSectionProps = {
 export function RecommendationSection({
   status,
   data,
-  errorMessage,
   onRetry,
 }: RecommendationSectionProps) {
   if (status === "idle") {

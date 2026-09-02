@@ -44,9 +44,7 @@ describe("RecommendationSection", () => {
   });
 
   it("status error merender error state dengan tombol retry", () => {
-    render(
-      <RecommendationSection status="error" errorMessage="x" onRetry={vi.fn()} />,
-    );
+    render(<RecommendationSection status="error" onRetry={vi.fn()} />);
     expect(screen.getByText(content.results.error.title)).toBeInTheDocument();
   });
 
