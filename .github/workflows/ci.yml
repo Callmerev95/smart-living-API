@@ -113,18 +113,18 @@ jobs:
       - name: Build images
         run: docker compose build
 
+      # `--wait` menunggu SEMUA service ber-healthcheck menjadi healthy dan gagal
+      # bila ada container exit/unhealthy. Tanpa ini `up -d` kembali segera dan step
+      # berikutnya menabrak web yang belum selesai boot (connection reset).
       - name: Start services
-        run: docker compose up -d
+        run: docker compose up -d --wait --wait-timeout 180
 
-      - name: Wait for API health
+      # Verifikasi payload health, bukan sekadar "merespons" — membuktikan dataset
+      # benar-benar ter-load di dalam image.
+      - name: Verify API health payload
         run: |
-          for i in $(seq 1 30); do
-            if curl -fsS http://localhost:8000/api/v1/health; then
-              echo "API sehat"; exit 0
-            fi
-            sleep 3
-          done
-          echo "API tidak sehat"; docker compose logs api; exit 1
+          curl -fsS http://localhost:8000/api/v1/health | grep -q '"recipeCount":60'
+          echo "API sehat, dataset termuat"
 
       - name: Smoke test web
         run: |
@@ -140,7 +140,9 @@ jobs:
 
       - name: Show logs on failure
         if: failure()
-        run: docker compose logs
+        run: |
+          docker compose ps
+          docker compose logs
 
       - name: Tear down
         if: always()
