@@ -15,6 +15,28 @@ permissions:
   contents: read
 
 jobs:
+  dataset:
+    name: Dataset (validator)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+          cache-dependency-glob: apps/api/uv.lock
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Validate dataset
+        run: uv run python scripts/validate_dataset.py
+
   api:
     name: API (lint + test)
     runs-on: ubuntu-latest
@@ -40,7 +62,7 @@ jobs:
       - name: Ruff format check
         run: uv run ruff format --check .
 
-      - name: Pytest
+      - name: Pytest (with coverage gate)
         run: uv run pytest
 
   web:

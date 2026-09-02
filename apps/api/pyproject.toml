@@ -54,6 +54,12 @@ addopts = ["-v", "--tb=short", "--cov=app", "--cov-report=term-missing"]
 testpaths = ["tests"]
 pythonpath = ["."]
 
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/services/ai/*"]
+
 [tool.coverage.report]
-fail_under = 0
+# Core recommendation logic wajib teruji (docs/development-roadmap.md §11).
+fail_under = 90
 precision = 1
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
