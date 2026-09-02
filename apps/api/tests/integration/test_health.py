@@ -7,10 +7,13 @@ from app.main import create_app
 client = TestClient(create_app())
 
 
-def test_health_returns_ok() -> None:
+def test_health_returns_ok_with_dataset_counts() -> None:
     response = client.get("/api/v1/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    payload = response.json()
+    assert payload["status"] == "ok"
+    assert payload["recipeCount"] == 60
+    assert payload["ingredientCount"] == 94
 
 
 def test_health_is_registered_under_v1_prefix() -> None:

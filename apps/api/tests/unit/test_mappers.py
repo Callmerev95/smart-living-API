@@ -45,12 +45,17 @@ def match(recipe_id: str = "recipe_001", pct: int = 100) -> MatchResult:
     )
 
 
-def domain_result(**overrides: object) -> RecommendationResult:
+def domain_result(
+    *,
+    recipes: dict[str, Recipe] | None = None,
+    **overrides: object,
+) -> RecommendationResult:
     defaults: dict[str, object] = {
         "raw": ("telur", "ayam"),
         "canonical": ("egg", "chicken"),
         "unknown": (),
         "results": (match(),),
+        "recipes": recipes if recipes is not None else {"recipe_001": recipe()},
         "limit": 5,
         "threshold": 30,
     }
@@ -61,7 +66,7 @@ def domain_result(**overrides: object) -> RecommendationResult:
 class TestRecommendationMapper:
     def test_merges_match_with_recipe_data(self) -> None:
         """MatchResult hanya punya skor; nama & steps berasal dari Recipe."""
-        response = to_recommendation_response(domain_result(), {"recipe_001": recipe()})
+        response = to_recommendation_response(domain_result())
         result = response.results[0]
         assert result.id == "recipe_001"
         assert result.name == "Omelet Ayam Wortel"
@@ -70,55 +75,49 @@ class TestRecommendationMapper:
 
     def test_ingredients_field_is_full_list(self) -> None:
         """Field `ingredients` memuat semua bahan termasuk opsional dan staple."""
-        response = to_recommendation_response(domain_result(), {"recipe_001": recipe()})
+        response = to_recommendation_response(domain_result())
         assert response.results[0].ingredients == ["egg", "chicken", "shallot", "salt"]
 
     def test_preserves_service_order(self) -> None:
         """Mapper tidak boleh me-sort ulang hasil dari service."""
         result = domain_result(
             results=(match("recipe_002", 60), match("recipe_001", 100)),
+            recipes={"recipe_001": recipe("recipe_001"), "recipe_002": recipe("recipe_002")},
         )
-        lookup = {"recipe_001": recipe("recipe_001"), "recipe_002": recipe("recipe_002")}
-        response = to_recommendation_response(result, lookup)
+        response = to_recommendation_response(result)
         assert [r.id for r in response.results] == ["recipe_002", "recipe_001"]
 
     def test_unknown_passed_through(self) -> None:
-        response = to_recommendation_response(
-            domain_result(unknown=("kangkung",)), {"recipe_001": recipe()}
-        )
+        response = to_recommendation_response(domain_result(unknown=("kangkung",)))
         assert response.unknown_ingredients == ["kangkung"]
 
     def test_query_carries_raw_and_canonical(self) -> None:
-        response = to_recommendation_response(domain_result(), {"recipe_001": recipe()})
+        response = to_recommendation_response(domain_result())
         assert response.query.raw == ["telur", "ayam"]
         assert response.query.ingredients == ["egg", "chicken"]
 
     def test_meta_count_matches_results(self) -> None:
-        response = to_recommendation_response(domain_result(), {"recipe_001": recipe()})
+        response = to_recommendation_response(domain_result())
         assert response.meta.count == len(response.results) == 1
 
     def test_meta_reports_limit_and_threshold(self) -> None:
-        response = to_recommendation_response(
-            domain_result(limit=3, threshold=50), {"recipe_001": recipe()}
-        )
+        response = to_recommendation_response(domain_result(limit=3, threshold=50))
         assert response.meta.limit == 3
         assert response.meta.threshold == 50
 
     def test_missing_recipe_in_lookup_is_skipped(self) -> None:
         """Skor tanpa resep pasangannya dilewati, bukan mengirim data separuh."""
-        response = to_recommendation_response(
-            domain_result(results=(match("recipe_999"),)), {"recipe_001": recipe()}
-        )
+        response = to_recommendation_response(domain_result(recipes={}))
         assert response.results == []
         assert response.meta.count == 0
 
     def test_empty_results(self) -> None:
-        response = to_recommendation_response(domain_result(results=()), {})
+        response = to_recommendation_response(domain_result(results=(), recipes={}))
         assert response.results == []
         assert response.meta.count == 0
 
     def test_difficulty_serialized_as_string(self) -> None:
-        response = to_recommendation_response(domain_result(), {"recipe_001": recipe()})
+        response = to_recommendation_response(domain_result())
         payload = response.model_dump(by_alias=True)
         assert payload["results"][0]["difficulty"] == "easy"
 

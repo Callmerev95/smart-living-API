@@ -7,7 +7,7 @@ membuat domain model mewarisi `BaseModel` (`AGENTS.md` §4).
 Semua fungsi di sini murni — tanpa akses repository maupun file.
 """
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 
 from app.domain.models.ingredient import Ingredient
 from app.domain.models.recipe import Recipe
@@ -22,20 +22,17 @@ from app.schemas.recommendation import (
 from app.services.recommendation_service import RecommendationResult
 
 
-def to_recommendation_response(
-    result: RecommendationResult,
-    recipe_lookup: Mapping[str, Recipe],
-) -> RecommendationResponse:
+def to_recommendation_response(result: RecommendationResult) -> RecommendationResponse:
     """Gabungkan skor (`MatchResult`) dengan data resep menjadi response.
 
     `MatchResult` sengaja tidak menyimpan nama/steps resep, jadi mapper yang
-    menyatukan keduanya. Urutan `result.results` dipertahankan apa adanya —
-    mapper TIDAK melakukan sorting ulang.
+    menyatukan keduanya memakai `result.recipes`. Urutan `result.results`
+    dipertahankan apa adanya — mapper TIDAK melakukan sorting ulang.
     """
     items: list[RecommendationItem] = []
 
     for match in result.results:
-        recipe = recipe_lookup.get(match.recipe_id)
+        recipe = result.recipes.get(match.recipe_id)
         if recipe is None:
             # Skor mengacu resep yang tidak ada: hanya mungkin bila dataset
             # berubah di tengah proses. Lewati daripada mengirim data separuh.

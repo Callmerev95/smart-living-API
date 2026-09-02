@@ -158,13 +158,42 @@ class TestApiLayer:
                 if forbidden in called:
                     violations.append(f"{path.relative_to(APP_ROOT)} memanggil `{forbidden}`")
 
-            for module in _imported_modules(path):
-                if module.startswith("app.repositories"):
-                    violations.append(
-                        f"{path.relative_to(APP_ROOT)} mengimpor repository langsung: `{module}`"
-                    )
-
         assert not violations, "route tidak boleh akses data langsung:\n" + "\n".join(violations)
+
+    def test_main_use_case_route_goes_through_service_only(self) -> None:
+        """Rule 2 berlaku untuk use case utama: recommendations wajib lewat service.
+
+        Route read-through sederhana (recipes/ingredients) boleh memakai repository
+        lewat dependency injection — itu memang instruksi task T-P4-11/T-P4-12.
+        Wiring DI-nya terpusat di `app/api/v1/deps.py`.
+        """
+        route = APP_ROOT / "api" / "v1" / "routes" / "recommendations.py"
+        if not route.exists():
+            return
+
+        violations = [
+            f"recommendations.py mengimpor `{module}`"
+            for module in _imported_modules(route)
+            if module.startswith("app.repositories")
+        ]
+
+        assert not violations, "\n".join(violations)
+
+    def test_only_deps_module_wires_repositories(self) -> None:
+        """Import repository di layer API terpusat di satu modul DI, tidak tersebar."""
+        api_dir = APP_ROOT / "api"
+        if not api_dir.exists():
+            return
+
+        violations = [
+            f"{path.relative_to(APP_ROOT)} mengimpor `{module}`"
+            for path in _iter_python_files(api_dir)
+            if path.name != "deps.py"
+            for module in _imported_modules(path)
+            if module.startswith("app.repositories")
+        ]
+
+        assert not violations, "wiring repository harus lewat deps.py:\n" + "\n".join(violations)
 
     def test_routes_do_not_import_matching_domain(self) -> None:
         """Route tidak boleh menghitung skor — algoritma diakses lewat service."""

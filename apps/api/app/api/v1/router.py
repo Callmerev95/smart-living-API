@@ -6,7 +6,10 @@ Setiap modul route hanya mendaftarkan endpoint — tanpa business logic.
 
 from fastapi import APIRouter
 
-from app.api.v1.routes import health
+from app.api.v1.routes import health, ingredients, recipes, recommendations
 
 api_v1_router = APIRouter()
+api_v1_router.include_router(recommendations.router)
+api_v1_router.include_router(recipes.router)
+api_v1_router.include_router(ingredients.router)
 api_v1_router.include_router(health.router)

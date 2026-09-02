@@ -9,13 +9,14 @@ format JSON (hanya bicara ke interface repository), dan tidak tahu HTTP
 (`docs/component-architecture.md` §15, `AGENTS.md` §4).
 """
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from app.core.config import Settings
 from app.domain.matching.engine import match_recipes
 from app.domain.matching.ranking import apply_limit, filter_by_threshold, rank
 from app.domain.models.match_result import MatchResult
+from app.domain.models.recipe import Recipe
 from app.repositories.base import IngredientRepository, RecipeRepository
 from app.services.ingredient_normalizer import IngredientNormalizer
 
@@ -29,6 +30,10 @@ class RecommendationResult:
         canonical: Canonical name hasil normalisasi, sudah dedupe (Delta 3).
         unknown: Bahan di luar kamus (Delta 2). Bukan error.
         results: Hasil yang sudah difilter, diurutkan, dan dibatasi.
+        recipes: Resep yang muncul di `results`, dipetakan dari id. Disertakan agar
+            API layer tidak perlu menyentuh repository sendiri — `MatchResult` hanya
+            membawa skor, sedangkan response butuh nama, steps, dan tag resep
+            (`docs/component-architecture.md` §25 Rule 2).
         limit: Limit yang benar-benar dipakai setelah clamping.
         threshold: Ambang relevansi yang dipakai — dikembalikan untuk transparansi.
     """
@@ -37,6 +42,7 @@ class RecommendationResult:
     canonical: tuple[str, ...]
     unknown: tuple[str, ...]
     results: tuple[MatchResult, ...]
+    recipes: Mapping[str, Recipe]
     limit: int
     threshold: int
 
@@ -77,10 +83,11 @@ class RecommendationService:
         threshold = self._settings.min_match_threshold
 
         normalization = self._normalizer.normalize(ingredients)
+        recipes = self._recipe_repository.get_all()
 
         scored = match_recipes(
             normalization.canonical,
-            self._recipe_repository.get_all(),
+            recipes,
             self._ingredient_repository.get_staple_names(),
         )
 
@@ -90,11 +97,14 @@ class RecommendationService:
         ranked = rank(relevant)
         limited = apply_limit(ranked, effective_limit)
 
+        selected_ids = {match.recipe_id for match in limited}
+
         return RecommendationResult(
             raw=normalization.raw,
             canonical=normalization.canonical,
             unknown=normalization.unknown,
             results=limited,
+            recipes={recipe.id: recipe for recipe in recipes if recipe.id in selected_ids},
             limit=effective_limit,
             threshold=threshold,
         )
