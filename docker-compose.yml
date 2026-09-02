@@ -1,0 +1,53 @@
+# ==============================================================================
+# Orkestrasi lokal: API + Web.
+#
+# Tanpa PostgreSQL/Redis — dataset MVP masih JSON dan belum ada kebutuhan nyata
+# (`docs/technical-architecture.md` §23: jangan menambah service hanya agar
+# terlihat kompleks).
+#
+# Jalankan:
+#   docker compose up --build
+#   buka http://localhost:3000
+# ==============================================================================
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Origin web lokal — bukan wildcard.
+      CORS_ORIGINS: http://localhost:3000
+      LOG_LEVEL: INFO
+    healthcheck:
+      # Python dipakai karena image slim tidak menyertakan curl/wget.
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/v1/health').status == 200 else 1)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args:
+        # NEXT_PUBLIC_* dibakar saat build. Browser user yang memanggil API,
+        # jadi URL-nya harus bisa dijangkau dari host — bukan `http://api:8000`
+        # yang hanya berlaku di dalam network compose.
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped

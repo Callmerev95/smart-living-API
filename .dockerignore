@@ -1,0 +1,45 @@
+# Git & CI
+.git
+.gitignore
+.github
+
+# Dokumentasi & aset — tidak dibutuhkan runtime
+docs
+README.md
+AGENTS.md
+
+# Artefak build
+apps/web/.next
+apps/web/out
+apps/web/node_modules
+apps/web/tsconfig.tsbuildinfo
+apps/api/.venv
+apps/api/dist
+apps/api/build
+
+# Cache tooling
+**/__pycache__
+**/*.py[cod]
+apps/api/.pytest_cache
+apps/api/.ruff_cache
+apps/api/.coverage
+apps/api/htmlcov
+
+# Test — tidak masuk image produksi
+apps/api/tests
+apps/web/tests
+apps/web/e2e
+apps/web/playwright-report
+apps/web/test-results
+
+# Secret & environment lokal
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Docker
+docker-compose.yml
+docker/
+
+# OS
+**/.DS_Store
