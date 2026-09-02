@@ -4,9 +4,10 @@ Route tipis: request tervalidasi -> service -> mapper -> response
 (`docs/component-architecture.md` §35). Tidak ada perhitungan skor di sini.
 """
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Request, status
 
 from app.api.v1.deps import RecommendationServiceDep
+from app.core.logging import log_recommendation
 from app.schemas.error import ErrorResponse
 from app.schemas.mappers import to_recommendation_response
 from app.schemas.recommendation import RecommendationRequest, RecommendationResponse
@@ -39,6 +40,15 @@ router = APIRouter(tags=["recommendations"])
 def recommend(
     payload: RecommendationRequest,
     service: RecommendationServiceDep,
+    request: Request,
 ) -> RecommendationResponse:
     result = service.recommend(payload.ingredients, payload.limit)
+
+    log_recommendation(
+        request,
+        ingredient_count=len(result.canonical),
+        result_count=len(result.results),
+        unknown_count=len(result.unknown),
+    )
+
     return to_recommendation_response(result)

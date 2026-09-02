@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from app.api.v1.router import api_v1_router
 from app.core.config import get_settings
 from app.core.errors import AppError, ErrorCode
+from app.core.logging import RequestLoggingMiddleware, configure_logging
 from app.schemas.error import ErrorDetail, ErrorResponse
 
 API_V1_PREFIX = "/api/v1"
@@ -93,6 +94,7 @@ def register_exception_handlers(app: FastAPI) -> None:
 def create_app() -> FastAPI:
     """Bangun instance FastAPI. Dipakai juga oleh test agar tidak bergantung state global."""
     settings = get_settings()
+    configure_logging(settings.log_level)
 
     app = FastAPI(
         title="Smart Living API",
@@ -103,6 +105,8 @@ def create_app() -> FastAPI:
         openapi_tags=TAGS_METADATA,
     )
 
+    # Middleware dieksekusi dari yang terakhir ditambahkan, jadi logging dipasang
+    # setelah CORS agar tetap membungkus seluruh siklus request.
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -110,6 +114,7 @@ def create_app() -> FastAPI:
         allow_headers=["Content-Type"],
         expose_headers=["X-Request-ID"],
     )
+    app.add_middleware(RequestLoggingMiddleware)
 
     register_exception_handlers(app)
     app.include_router(api_v1_router, prefix=API_V1_PREFIX)
