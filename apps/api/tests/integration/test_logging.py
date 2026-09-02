@@ -78,3 +78,25 @@ class TestLogContent:
             client.post("/api/v1/recommendations", json={"ingredients": []})
         record = next(r for r in caplog.records if getattr(r, "message", "") == "request_completed")
         assert record.status_code == 400  # type: ignore[attr-defined]
+
+
+class TestNonHttpScope:
+    def test_non_http_scope_passes_through(self) -> None:
+        """Middleware hanya menangani scope HTTP; lifespan diteruskan apa adanya."""
+        import anyio
+
+        from app.core.logging import RequestLoggingMiddleware
+
+        received: list[dict] = []
+
+        async def inner_app(scope, receive, send) -> None:  # type: ignore[no-untyped-def]
+            received.append(scope)
+
+        middleware = RequestLoggingMiddleware(inner_app)
+
+        async def run() -> None:
+            await middleware({"type": "lifespan"}, None, None)
+
+        anyio.run(run)
+
+        assert received == [{"type": "lifespan"}]
