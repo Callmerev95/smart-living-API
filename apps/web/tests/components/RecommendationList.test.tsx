@@ -32,6 +32,8 @@ function response(overrides: Partial<RecommendationResponse> = {}): Recommendati
   };
 }
 
+const DISPLAY_NAMES = { egg: "Telur", chicken: "Ayam" };
+
 describe("RecommendationSection", () => {
   it("status idle merender initial state", () => {
     render(<RecommendationSection status="idle" onRetry={vi.fn()} />);
@@ -93,10 +95,44 @@ describe("RecommendationSection", () => {
     expect(cards[1]).toHaveTextContent("Resep recipe_a");
   });
 
-  it("chip normalisasi ditampilkan", () => {
+  it("chip menampilkan displayName saja bila sama dengan input user", () => {
+    const data = response();
+    render(
+      <RecommendationSection
+        status="success"
+        data={data}
+        displayNames={DISPLAY_NAMES}
+        onRetry={vi.fn()}
+      />,
+    );
+    const chips = screen.getByLabelText(content.results.chipsLabel);
+    expect(chips.textContent).toContain("Telur");
+    expect(chips.textContent).toContain("Ayam");
+  });
+
+  it("chip menampilkan mapping saat input berbeda dari displayName (Delta 3)", () => {
+    const data = response({
+      query: { raw: ["telor", "dada ayam"], ingredients: ["egg", "chicken"] },
+    });
+    render(
+      <RecommendationSection
+        status="success"
+        data={data}
+        displayNames={DISPLAY_NAMES}
+        onRetry={vi.fn()}
+      />,
+    );
+    const chips = screen.getByLabelText(content.results.chipsLabel);
+    expect(chips.textContent).toContain("telor");
+    expect(chips.textContent).toContain("Telur");
+    expect(chips.textContent).toContain("dada ayam");
+    expect(chips.textContent).toContain("Ayam");
+  });
+
+  it("tanpa kamus, chip jatuh ke canonical name", () => {
     const data = response();
     render(<RecommendationSection status="success" data={data} onRetry={vi.fn()} />);
-    const chips = screen.getByLabelText("Bahan yang dicari");
+    const chips = screen.getByLabelText(content.results.chipsLabel);
     expect(chips.textContent).toContain("telur");
     expect(chips.textContent).toContain("egg");
   });
@@ -106,8 +142,15 @@ describe("RecommendationSection", () => {
       query: { raw: ["telur", "kangkung"], ingredients: ["egg"] },
       unknownIngredients: ["kangkung"],
     });
-    render(<RecommendationSection status="success" data={data} onRetry={vi.fn()} />);
-    const chips = screen.getByLabelText("Bahan yang dicari");
+    render(
+      <RecommendationSection
+        status="success"
+        data={data}
+        displayNames={DISPLAY_NAMES}
+        onRetry={vi.fn()}
+      />,
+    );
+    const chips = screen.getByLabelText(content.results.chipsLabel);
     expect(chips.textContent).toContain("kangkung");
     expect(chips.textContent).toContain(content.chip.unknownSuffix);
   });

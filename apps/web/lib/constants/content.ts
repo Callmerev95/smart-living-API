@@ -4,6 +4,10 @@
  */
 
 export const content = {
+  ui: {
+    loadingLabel: "Memuat",
+  },
+
   hero: {
     title: "Apa yang bisa saya masak dari bahan yang sudah ada?",
     subtitle:
@@ -35,6 +39,8 @@ export const content = {
   },
 
   results: {
+    chipsLabel: "Bahan yang dicari",
+    sectionLabel: "Rekomendasi",
     initial: {
       title: "Mulai dari bahan yang ada",
       body: "Masukkan minimal satu bahan, lalu kami tunjukkan masakan yang paling mungkin kamu buat.",

@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Spinner } from "@/components/ui/Spinner";
+import { content } from "@/lib/constants/content";
 
 describe("Button", () => {
   it("merender label dan memanggil onClick", async () => {
@@ -115,7 +116,7 @@ describe("Skeleton", () => {
 describe("Spinner", () => {
   it("punya label yang terbaca screen reader", () => {
     render(<Spinner />);
-    expect(screen.getByRole("status", { name: "Memuat" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: content.ui.loadingLabel })).toBeInTheDocument();
   });
 });
 

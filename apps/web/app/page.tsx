@@ -5,6 +5,7 @@ import { useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { IngredientInput } from "@/components/ingredients/IngredientInput";
 import { RecommendationSection } from "@/components/recommendations/RecommendationSection";
+import { useIngredients } from "@/hooks/useIngredients";
 import { useRecommendations } from "@/hooks/useRecommendations";
 
 /**
@@ -13,6 +14,7 @@ import { useRecommendations } from "@/hooks/useRecommendations";
  */
 export default function Home() {
   const { status, state, submit, reset } = useRecommendations();
+  const { displayNames } = useIngredients();
   const [lastIngredients, setLastIngredients] = useState<string[]>([]);
 
   function handleSubmit(ingredients: string[]) {
@@ -35,6 +37,7 @@ export default function Home() {
       <RecommendationSection
         status={status}
         data={state.status === "success" ? state.data : undefined}
+        displayNames={displayNames}
         onRetry={handleRetry}
       />
     </main>

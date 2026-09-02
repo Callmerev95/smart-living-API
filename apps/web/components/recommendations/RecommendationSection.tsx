@@ -3,20 +3,30 @@ import { RecommendationCard } from "@/components/recommendations/RecommendationC
 import { RecommendationEmpty } from "@/components/recommendations/RecommendationEmpty";
 import { RecommendationError } from "@/components/recommendations/RecommendationError";
 import { RecommendationSkeleton } from "@/components/recommendations/RecommendationSkeleton";
-import type { Recommendation, RecommendationResponse } from "@/types/api";
 import { content, fill } from "@/lib/constants/content";
+import type { Recommendation, RecommendationResponse } from "@/types/api";
 
-function NormalizedIngredientChips({ data }: { data: RecommendationResponse }) {
+type DisplayNameMap = Record<string, string>;
+
+function NormalizedIngredientChips({
+  data,
+  displayNames,
+}: {
+  data: RecommendationResponse;
+  displayNames: DisplayNameMap;
+}) {
   const { ingredients: known, raw } = data.query;
 
   return (
-    <div className="flex flex-wrap gap-2" aria-label="Bahan yang dicari">
+    <div className="flex flex-wrap gap-2" aria-label={content.results.chipsLabel}>
       {known.map((canonical, index) => {
         const rawValue = raw[index] ?? canonical;
+        // Tanpa kamus, canonical dipakai apa adanya — chip tetap informatif.
+        const displayName = displayNames[canonical] ?? canonical;
 
-        if (rawValue.toLowerCase() === canonical.toLowerCase()) {
+        if (rawValue.toLowerCase() === displayName.toLowerCase()) {
           return (
-            <IngredientTag key={`known-${canonical}`} variant="plain" displayName={canonical} />
+            <IngredientTag key={`known-${canonical}`} variant="plain" displayName={displayName} />
           );
         }
 
@@ -25,7 +35,7 @@ function NormalizedIngredientChips({ data }: { data: RecommendationResponse }) {
             key={`known-${canonical}`}
             variant="normalized"
             raw={rawValue}
-            displayName={canonical}
+            displayName={displayName}
           />
         );
       })}
@@ -49,6 +59,8 @@ export function RecommendationList({ results }: { results: Recommendation[] }) {
 type RecommendationSectionProps = {
   status: "idle" | "loading" | "success" | "error";
   data?: RecommendationResponse;
+  /** Peta `canonical -> displayName` dari kamus bahan. Opsional; fallback ke canonical. */
+  displayNames?: DisplayNameMap;
   onRetry: () => void;
 };
 
@@ -56,11 +68,12 @@ type RecommendationSectionProps = {
 export function RecommendationSection({
   status,
   data,
+  displayNames = {},
   onRetry,
 }: RecommendationSectionProps) {
   if (status === "idle") {
     return (
-      <section aria-label="Rekomendasi">
+      <section aria-label={content.results.sectionLabel}>
         <div className="rounded-lg border border-dashed border-zinc-300 p-8 text-center">
           <h2 className="text-lg font-semibold text-zinc-900">{content.results.initial.title}</h2>
           <p className="mt-2 text-sm text-zinc-600">{content.results.initial.body}</p>
@@ -80,8 +93,8 @@ export function RecommendationSection({
   if (!data || data.results.length === 0) {
     const allUnknown = Boolean(data?.unknownIngredients.length && !data.query.ingredients.length);
     return (
-      <section className="flex flex-col gap-4" aria-label="Rekomendasi">
-        {data && <NormalizedIngredientChips data={data} />}
+      <section className="flex flex-col gap-4" aria-label={content.results.sectionLabel}>
+        {data && <NormalizedIngredientChips data={data} displayNames={displayNames} />}
         <RecommendationEmpty
           unknownIngredients={data?.unknownIngredients}
           allUnknown={allUnknown}
@@ -96,12 +109,12 @@ export function RecommendationSection({
       : fill(content.results.success.heading, { count: data.results.length });
 
   return (
-    <section className="flex flex-col gap-4" aria-label="Rekomendasi">
+    <section className="flex flex-col gap-4" aria-label={content.results.sectionLabel}>
       <div className="flex flex-col gap-1" role="status">
         <h2 className="text-2xl font-semibold text-zinc-900">{heading}</h2>
         <p className="text-sm text-zinc-500">{content.results.success.sortNote}</p>
       </div>
-      <NormalizedIngredientChips data={data} />
+      <NormalizedIngredientChips data={data} displayNames={displayNames} />
       <RecommendationList results={data.results} />
     </section>
   );
