@@ -44,10 +44,23 @@ class TestEntrypoint:
     def test_entrypoint_exports_app(self) -> None:
         """Runtime memuat variabel top-level bernama `app`."""
         source = ENTRYPOINT.read_text(encoding="utf-8")
-        assert "from apps.api.app.main import app" in source
+        assert "from app.main import app" in source
+
+    def test_entrypoint_adds_apps_api_to_sys_path(self) -> None:
+        """Modul di `app/` memakai import absolut `from app.xxx`.
+
+        Konvensi itu butuh `apps/api` di `sys.path`. Pytest mengaturnya lewat
+        `pythonpath`, Docker lewat `WORKDIR`. Di Vercel hanya root repo yang ada
+        di `sys.path`, jadi entrypoint harus menambahkannya sendiri — tanpa ini
+        function gagal dengan `ModuleNotFoundError: No module named 'app'`.
+        """
+        source = ENTRYPOINT.read_text(encoding="utf-8")
+        assert "sys.path.insert" in source
+        assert '"apps"' in source
+        assert '"api"' in source
 
     def test_entrypoint_has_no_logic(self) -> None:
-        """Entrypoint hanya re-export; komposisi tetap di `app/main.py`."""
+        """Entrypoint hanya mengatur path dan re-export; komposisi tetap di `app/main.py`."""
         source = ENTRYPOINT.read_text(encoding="utf-8")
         for forbidden in ("FastAPI(", "add_middleware", "include_router", "uvicorn"):
             assert forbidden not in source

@@ -66,20 +66,43 @@ bernama `app`. Tiga berkas di root repo yang mengaturnya:
 
 | Berkas | Peran |
 |---|---|
-| `index.py` | Entrypoint — hanya `from apps.api.app.main import app`, tanpa logika |
+| `index.py` | Entrypoint — mengatur `sys.path` lalu re-export `app`, tanpa logika |
 | `requirements.txt` | Dependency runtime: fastapi, pydantic, pydantic-settings |
 | `vercel.json` | `excludeFiles` agar bundle ramping (web, test, docs tidak ikut) |
 
 `uvicorn` sengaja **tidak** ada di `requirements.txt` — Vercel memuat ASGI app secara
 langsung, servernya disediakan platform. Menyertakannya hanya memperbesar bundle.
 
+#### Kenapa entrypoint mengatur `sys.path`
+
+Seluruh modul di `apps/api/app/` memakai import absolut `from app.xxx import ...` — ada 61
+tempat. Konvensi itu bekerja karena `apps/api` selalu berada di `sys.path`:
+
+| Lingkungan | Mekanisme |
+|---|---|
+| pytest | `pythonpath = ["."]` di `pyproject.toml`, dijalankan dari `apps/api` |
+| Docker | `WORKDIR /app` dengan `app/` sebagai subfolder langsung |
+| Vercel | **Hanya root repo di `sys.path`** — entrypoint harus menambahkannya sendiri |
+
+Tanpa penyesuaian itu, function gagal dengan `FUNCTION_INVOCATION_FAILED` yang di log
+muncul sebagai `ModuleNotFoundError: No module named 'app'`. Yang menipu: build tetap
+sukses, karena `index.py` sendiri valid — error baru muncul saat modul yang diimpornya
+dieksekusi.
+
+Menyesuaikan `sys.path` di satu berkas dipilih ketimbang mengubah 61 import menjadi
+relatif: konvensi absolut sudah terbukti di pytest dan Docker, dan mengubahnya berisiko
+merusak dua jalur yang berjalan baik.
+
+#### Dataset
+
 Dataset di `data/recipes/` ikut ter-deploy karena tidak dikecualikan. `Settings`
 menemukannya lewat `_find_repo_root()` yang menelusuri ancestor sampai menemukan folder
 `data/recipes` — layout Vercel identik dengan checkout, jadi tidak ada perubahan kode.
 
 Konsistensi ketiga berkas dijaga oleh `apps/api/tests/unit/test_vercel_deployment.py`:
-versi di `requirements.txt` harus sama dengan `pyproject.toml`, dataset tidak boleh masuk
-`excludeFiles`, dan entrypoint tidak boleh berisi logika.
+versi di `requirements.txt` harus sama dengan `pyproject.toml`, `uvicorn` tidak boleh ada,
+dataset tidak boleh masuk `excludeFiles`, entrypoint harus mengatur `sys.path`, dan
+entrypoint tidak boleh berisi logika.
 
 ### 1.2 Buat project
 
@@ -300,10 +323,20 @@ tidak ada yang perlu dipertahankan antar invocation.
 
 ## Troubleshooting
 
-### Build gagal: `ModuleNotFoundError: No module named 'apps'`
+### `FUNCTION_INVOCATION_FAILED` saat request, padahal build sukses
 
-Root Directory bukan `/`. `index.py` mengimpor `apps.api.app.main`, yang hanya terjangkau
-bila context-nya root repo.
+Runtime Logs akan menampilkan `ModuleNotFoundError: No module named 'app'`.
+
+Penyebab: `index.py` tidak menambahkan `apps/api` ke `sys.path`, sehingga import absolut
+`from app.xxx` gagal ketika `main.py` dieksekusi (lihat §1.1). Yang menipu: build tetap
+sukses karena `index.py` sendiri valid.
+
+Test `test_entrypoint_adds_apps_api_to_sys_path` menjaga ini agar tidak terulang.
+
+### Build gagal: `ModuleNotFoundError` untuk modul lain
+
+Root Directory bukan `/`. Entrypoint dan `data/recipes/` hanya terjangkau bila context-nya
+root repo.
 
 ### Function error: dataset tidak ditemukan
 
