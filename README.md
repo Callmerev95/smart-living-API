@@ -14,10 +14,10 @@ sebagai lapisan enhancement di masa depan, bukan fondasi.
 
 | | |
 |---|---|
-| **Demo** | _belum di-deploy_ — lihat [Deployment](#deployment) |
-| **API Docs** | `/docs` (OpenAPI/Swagger, auto-generated) |
+| **Demo** | https://smart-living-web-silk.vercel.app |
+| **API Docs** | https://smart-living-api-p343.vercel.app/docs |
 | **Dataset** | 60 resep, 94 bahan kanonik, masakan Indonesia |
-| **Test** | 504 backend, 190 frontend, 10 E2E |
+| **Test** | 518 backend, 201 frontend, 10 E2E |
 | **Coverage** | 100% pada `app/` (gate CI 90%) |
 | **Latency** | p50 1.1 ms, p95 1.4 ms (lokal, 200 request) |
 
@@ -390,13 +390,13 @@ Stack trace tidak pernah dikirim ke client.
 ## Testing
 
 ```bash
-# Backend — 504 test, coverage gate 90%
+# Backend — 518 test, coverage gate 90%
 cd apps/api
 uv run pytest
 uv run ruff check .
 uv run python scripts/validate_dataset.py     # integritas dataset
 
-# Frontend — 190 test
+# Frontend — 201 test
 cd apps/web
 pnpm test
 pnpm typecheck
@@ -415,7 +415,8 @@ pnpm e2e
 | API (integration) | 87 | Kontrak, validasi, error, logging, OpenAPI |
 | Dataset | 41 | 16 aturan validasi, referential integrity |
 | Boundary | 15 | Aturan dependency, via parsing AST |
-| Component (web) | 190 | Render, interaksi, state, a11y, audit copy |
+| Deployment | 14 | Entrypoint Vercel, dependency pinning, dataset ikut ter-deploy |
+| Component (web) | 201 | Render, interaksi, state, a11y, audit copy & metadata |
 | E2E | 10 | Alur nyata di browser |
 
 Beberapa test yang menjaga hal yang mudah rusak diam-diam:

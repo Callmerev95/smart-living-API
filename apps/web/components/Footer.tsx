@@ -1,6 +1,5 @@
+import { REPO_URL } from "@/lib/constants/links";
 import { content } from "@/lib/constants/content";
-
-const REPO_URL = "https://github.com/Callmerev95/smart-living-API";
 
 export function Footer() {
   return (
@@ -9,6 +8,8 @@ export function Footer() {
         <p className="text-sm text-zinc-600">{content.footer.tagline}</p>
         <a
           href={REPO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-sm font-medium text-zinc-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         >
           {content.footer.repoLabel}

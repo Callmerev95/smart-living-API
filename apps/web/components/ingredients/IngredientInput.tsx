@@ -86,6 +86,10 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
             helpText={content.input.helper}
             value={value}
             error={error}
+            // Saat request berjalan, input dikunci agar submit ganda tidak terjadi
+            // dan status "sedang mencari" terlihat, bukan hanya di tombol.
+            disabled={loading}
+            className={loading ? "opacity-60" : undefined}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={handleKeyDown}
             autoComplete="off"
@@ -97,7 +101,7 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
             {loading ? content.input.submitLoading : content.input.submit}
           </Button>
           {value.length > 0 && (
-            <Button variant="ghost" onClick={handleClear}>
+            <Button variant="ghost" onClick={handleClear} disabled={loading}>
               {content.input.clear}
             </Button>
           )}
@@ -111,6 +115,7 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
             key={example}
             variant="secondary"
             className="px-2.5 py-1 text-xs"
+            disabled={loading}
             onClick={() => handleExample(example)}
           >
             {example}

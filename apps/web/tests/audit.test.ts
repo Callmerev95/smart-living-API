@@ -5,6 +5,9 @@
  * copy harus dari `content.ts`, request harus lewat `lib/api/`, dan tidak ada URL
  * API yang hardcode.
  */
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 const SOURCE_GLOBS = {
@@ -17,6 +20,16 @@ const SOURCE_GLOBS = {
     import: "default",
   }),
 };
+
+/**
+ * Baca berkas apa adanya dari disk.
+ *
+ * `import.meta.glob("?raw")` tidak bisa dipakai untuk CSS — Vite menangani CSS
+ * lewat pipeline sendiri dan mengembalikan string kosong.
+ */
+function readProjectFile(relativePath: string): string {
+  return readFileSync(join(process.cwd(), relativePath), "utf8");
+}
 
 async function loadSources(
   group: keyof typeof SOURCE_GLOBS,
@@ -131,6 +144,96 @@ describe("audit deployment config", () => {
     expect(code).toContain("undefined : \"standalone\"");
     // Tidak ada hardcode `output: "standalone"` tanpa guard.
     expect(code).not.toMatch(/^\s*output:\s*"standalone"/m);
+  });
+});
+
+describe("audit branding & metadata", () => {
+  it("body memakai font yang dimuat, bukan Arial", () => {
+    // Komentar aturan sebelumnya menyebut "Arial"; buang agar cek hanya kode nyata.
+    const css = stripComments(readProjectFile("app/globals.css"));
+
+    // Font Geist di-preload di layout; memakai Arial membuat preload itu terbuang.
+    expect(css).not.toContain("Arial");
+    expect(css).toContain("var(--font-sans)");
+  });
+
+  it("tidak ada blok dark mode yang bertentangan dengan latar terang", () => {
+    const css = readProjectFile("app/globals.css");
+
+    // `prefers-color-scheme: dark` pernah menyetel --foreground terang sementara
+    // body tetap bg-zinc-50, sehingga teks nyaris tak terbaca.
+    expect(css).not.toContain("prefers-color-scheme");
+  });
+
+  it("layout menyediakan metadata Open Graph dan Twitter lengkap", async () => {
+    const sources = await loadSources("app");
+    const layout = sources.find(([path]) => path.endsWith("layout.tsx"));
+
+    expect(layout).toBeDefined();
+    const code = layout![1];
+    for (const field of ["openGraph", "twitter", "summary_large_image", "opengraph-image"]) {
+      expect(code, field).toContain(field);
+    }
+  });
+
+  it("og:image absolute lewat metadataBase dari env/deployment", async () => {
+    const sources = await loadSources("app");
+    const layout = sources.find(([path]) => path.endsWith("layout.tsx"));
+
+    expect(layout).toBeDefined();
+    const code = layout![1];
+    expect(code).toContain("metadataBase");
+    expect(code).toContain("VERCEL_URL");
+  });
+
+  it("OG image digenerate lewat ImageResponse, bukan aset statis", async () => {
+    const sources = await loadSources("app");
+    const og = sources.find(([path]) => path.endsWith("opengraph-image.tsx"));
+
+    expect(og).toBeDefined();
+    expect(og![1]).toContain("ImageResponse");
+    expect(og![1]).toContain("next/og");
+    // Satori hanya mendukung flexbox.
+    expect(og![1]).not.toContain("display: \"grid\"");
+  });
+
+  it("judul halaman detail memakai nama resep, bukan ID", async () => {
+    const sources = await loadSources("app");
+    const page = sources.find(([path]) => path.includes("recipes/[id]"));
+
+    expect(page).toBeDefined();
+    const code = page![1];
+    expect(code).toContain("getRecipe");
+    expect(code).toContain("content.meta.detailTitle");
+  });
+
+  it("header memakai copy dari content.ts dan URL docs dari env", async () => {
+    const sources = await loadSources("components");
+    const header = sources.find(([path]) => path.endsWith("Header.tsx"));
+
+    expect(header).toBeDefined();
+    expect(header![1]).toContain('from "@/lib/constants/content"');
+    expect(header![1]).toContain("getDocsUrl");
+  });
+
+  it("setiap halaman punya anchor #main-content untuk skip link", async () => {
+    const sources = await loadSources("app");
+    const pages = sources.filter(([path]) => path.endsWith("page.tsx"));
+
+    expect(pages.length).toBeGreaterThan(0);
+    for (const [path, raw] of pages) {
+      expect(raw, path).toContain('id="main-content"');
+    }
+  });
+
+  it("link eksternal target=_blank selalu punya rel noopener", async () => {
+    const sources = await loadSources("components");
+
+    for (const [path, raw] of sources) {
+      const code = stripComments(raw);
+      if (!code.includes('target="_blank"')) continue;
+      expect(code, path).toContain("noopener");
+    }
   });
 });
 

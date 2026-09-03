@@ -8,6 +8,16 @@ export const content = {
     loadingLabel: "Memuat",
   },
 
+  brand: {
+    name: "Smart Living",
+    navLabel: "Navigasi utama",
+    nav: {
+      docs: "API Docs",
+      repo: "GitHub",
+    },
+    skipToContent: "Lompat ke konten utama",
+  },
+
   hero: {
     title: "Apa yang bisa saya masak dari bahan yang sudah ada?",
     subtitle:
@@ -121,6 +131,7 @@ export const content = {
   },
 
   showcase: {
+    eyebrow: "Untuk developer",
     heading: "Di balik layar",
     subheading: "Frontend ini hanya salah satu client dari Smart Living API.",
     requestHeading: "Contoh Request",
@@ -181,7 +192,9 @@ export const content = {
     title: "Smart Living — Masak dari bahan yang sudah ada",
     description:
       "Masukkan bahan yang ada di kulkas, dapatkan rekomendasi masakan yang bisa langsung kamu buat. API-first, deterministic matching.",
-    ogTitle: "Smart Living API",
+    ogTitle: "Smart Living",
+    // Judul halaman detail: `{name} — Smart Living`.
+    detailTitle: "{name} — Smart Living",
   },
 } as const;
 

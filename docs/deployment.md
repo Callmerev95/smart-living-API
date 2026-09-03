@@ -241,13 +241,15 @@ tidak otomatis memicu redeploy.
 ### Mengizinkan preview deployment
 
 Vercel membuat domain unik per pull request. Tambahkan domain yang diperlukan, dipisah
-koma:
+koma — untuk project saat ini polanya `smart-living-web-silk-*.vercel.app`:
 
 ```
-CORS_ORIGINS = https://smart-living-web.vercel.app,https://smart-living-web-git-dev-callmerev95.vercel.app
+CORS_ORIGINS = https://smart-living-web-silk.vercel.app,https://smart-living-web-silk-git-dev-callmerev95.vercel.app
 ```
 
-`CORS_ORIGINS` menerima format comma-separated maupun JSON array.
+`CORS_ORIGINS` menerima format comma-separated maupun JSON array. Contoh kedua di atas
+adalah domain preview branch `dev`; subdomain tengah (`-git-<branch>`) berubah sesuai
+branch yang di-deploy.
 
 > **Jangan pakai `*`.** Konfigurasi CORS terbuka membuat API bisa dipanggil dari situs mana
 > pun. Aturan ini tercatat sebagai larangan eksplisit di
@@ -257,11 +259,14 @@ CORS_ORIGINS = https://smart-living-web.vercel.app,https://smart-living-web-git-
 
 ## Langkah 4 — Verifikasi production
 
+URL di bawah adalah deployment nyata proyek ini, jadi perintahnya bisa langsung dijalankan.
+Di langkah 1–3 URL sengaja dibiarkan generik karena saat itu belum diketahui.
+
 ### 4.1 API
 
 ```bash
-API=https://smart-living-api.vercel.app
-WEB=https://smart-living-web.vercel.app
+API=https://smart-living-api-p343.vercel.app
+WEB=https://smart-living-web-silk.vercel.app
 
 # Health + dataset
 curl -fsS "$API/api/v1/health"
@@ -319,12 +324,16 @@ Periksa sebelum membagikan link demo:
 
 ## Langkah 5 — Update README
 
-Ganti baris demo di `README.md`:
+Isi baris demo di `README.md` dengan domain yang dihasilkan. Untuk deployment saat ini:
 
 ```markdown
-| **Demo** | https://smart-living-web.vercel.app |
-| **API Docs** | https://smart-living-api.vercel.app/docs |
+| **Demo** | https://smart-living-web-silk.vercel.app |
+| **API Docs** | https://smart-living-api-p343.vercel.app/docs |
 ```
+
+Tambahkan juga `NEXT_PUBLIC_SITE_URL` di project web bila memakai custom domain — nilai itu
+dipakai `metadataBase` untuk membuat `og:image` absolut. Tanpanya, `VERCEL_URL` dipakai
+sebagai fallback, yang berarti setiap preview deployment memakai domainnya sendiri.
 
 ---
 
