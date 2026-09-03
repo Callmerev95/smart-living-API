@@ -176,12 +176,36 @@ Project **kedua** dari repository yang sama.
 
 | Setting | Nilai |
 |---|---|
-| Framework Preset | Next.js |
+| Framework Preset | **Next.js** — periksa, jangan andalkan deteksi otomatis |
 | Root Directory | `apps/web` |
 | Build Command | `pnpm build` (default) |
 | Install Command | `pnpm install --frozen-lockfile` |
 
 Vercel membaca `packageManager` di `package.json` dan memakai pnpm 11.24.0 otomatis.
+
+`apps/web/vercel.json` menyatakan `"framework": "nextjs"` secara eksplisit karena deteksi
+otomatis bisa salah: `vite@8` ada di `devDependencies` sebagai peer dependency Vitest 4 —
+bukan sebagai bundler. Vercel yang melihat `vite` menyimpulkan ini project Vite, lalu
+mencari output di `dist/` yang tidak pernah dibuat. Jangan hapus `vite` dari
+`devDependencies`; Vitest membutuhkannya.
+
+#### Kenapa `output: "standalone"` conditional
+
+`apps/web/next.config.ts`:
+
+```ts
+output: process.env.VERCEL ? undefined : "standalone",
+```
+
+`standalone` dibutuhkan `docker/web.Dockerfile` (menghasilkan `.next/standalone` berisi
+`server.js` + `node_modules` hasil trace, sehingga image ramping). Di Vercel opsi itu justru
+merusak build: Next.js memanggil `copyTracedFiles`, yang membaca
+`.next/next-server.js.nft.json`. Vercel menangani file tracing dengan mekanismenya sendiri
+dan tidak menghasilkan berkas `.nft.json` itu, jadi build gagal dengan
+`ENOENT: ... next-server.js.nft.json`.
+
+`VERCEL=1` diset otomatis di Vercel dan tidak ada di lingkungan Docker/lokal, jadi satu
+ekspresi melayani keduanya. Test `audit.test.ts` menjaga agar guard-nya tidak hilang.
 
 ### 2.3 Environment variable
 
@@ -369,6 +393,26 @@ Tiga hal yang perlu dicek:
 
 `NEXT_PUBLIC_API_BASE_URL` belum diset saat build, atau diset setelah build berjalan.
 Variabel ini dibakar ke bundle — lakukan **redeploy**, bukan sekadar restart.
+
+### Web: build gagal dengan `No Output Directory named "dist" found`
+
+Framework Preset terdeteksi/terpilih sebagai **Vite**, bukan Next.js. Vite mengeluarkan
+hasil ke `dist/`; Next.js ke `.next/`.
+
+Penyebab: `vite` ada di `devDependencies` sebagai peer dependency Vitest, dan deteksi
+otomatis Vercel menyimpulkan salah. Perbaikan: set Framework Preset ke **Next.js** di
+Settings → Build & Deployment, dan pastikan Output Directory dikosongkan.
+`apps/web/vercel.json` sudah menyatakannya eksplisit untuk project baru.
+
+### Web: build gagal dengan `ENOENT: ... next-server.js.nft.json`
+
+`output: "standalone"` aktif saat build di Vercel. Next.js memanggil `copyTracedFiles`, yang
+membaca `.next/next-server.js.nft.json` — berkas yang tidak dihasilkan di Vercel karena
+platform memakai file tracing sendiri.
+
+Perbaikan sudah ada di `next.config.ts` sebagai guard `process.env.VERCEL ? undefined :
+"standalone"` (lihat §2.2). Kalau error ini muncul lagi, periksa guard itu masih utuh — test
+`audit.test.ts` juga menjaganya.
 
 ### Web: build gagal dengan `ERR_PNPM_IGNORED_BUILDS`
 

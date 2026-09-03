@@ -12,6 +12,10 @@ const SOURCE_GLOBS = {
   app: import.meta.glob("../app/**/*.tsx", { query: "?raw", import: "default" }),
   hooks: import.meta.glob("../hooks/**/*.ts", { query: "?raw", import: "default" }),
   api: import.meta.glob("../lib/api/**/*.ts", { query: "?raw", import: "default" }),
+  config: import.meta.glob("../{next.config.ts,vercel.json}", {
+    query: "?raw",
+    import: "default",
+  }),
 };
 
 async function loadSources(
@@ -107,6 +111,26 @@ describe("audit boundary API (§11)", () => {
 
     expect(client).toBeDefined();
     expect(client?.[1]).toContain("NEXT_PUBLIC_API_BASE_URL");
+  });
+});
+
+describe("audit deployment config", () => {
+  it("vercel.json menyatakan framework nextjs", async () => {
+    const sources = await loadSources("config");
+    const vc = sources.find(([path]) => path.endsWith("vercel.json"));
+    expect(vc).toBeDefined();
+    expect(vc![1]).toContain('"nextjs"');
+  });
+
+  it("output standalone conditional pada VERCEL env", async () => {
+    const sources = await loadSources("config");
+    const cfg = sources.find(([path]) => path.endsWith("next.config.ts"));
+    expect(cfg).toBeDefined();
+    const code = cfg![1];
+    expect(code).toContain("process.env.VERCEL");
+    expect(code).toContain("undefined : \"standalone\"");
+    // Tidak ada hardcode `output: "standalone"` tanpa guard.
+    expect(code).not.toMatch(/^\s*output:\s*"standalone"/m);
   });
 });
 
