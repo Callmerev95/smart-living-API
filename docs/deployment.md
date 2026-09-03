@@ -1,34 +1,40 @@
 # Panduan Deployment
 
-Web ke **Vercel**, API ke **Hugging Face Spaces** lewat Dockerfile.
+Web **dan** API di **Vercel**. Web sebagai aplikasi Next.js, API sebagai Python Function.
 
 ---
 
-## Mengapa platform ini
+## Mengapa Vercel untuk keduanya
 
-Kebutuhannya sempit: satu container Python stateless, dataset 96 KB read-only, dan biaya
-yang berkelanjutan untuk proyek portfolio.
+Kebutuhannya sempit: satu aplikasi Python stateless, dataset 96 KB read-only, dan biaya
+yang berkelanjutan untuk proyek portfolio — tanpa kartu kredit.
 
-| Platform | Docker | Biaya | Kartu kredit | Keputusan |
+| Platform | Docker di production | Biaya | Kartu kredit | Keputusan |
 |---|---|---|---|---|
-| **Hugging Face Spaces** | Ya | Gratis permanen | **Tidak perlu** | **Dipilih** |
-| Railway | Ya | Trial $5 / 30 hari, lalu berbayar | Perlu | Trial berbatas waktu |
+| **Vercel Python Functions** | Tidak | Gratis permanen | **Tidak perlu** | **Dipilih** |
+| Hugging Face Spaces | Ya | Docker SDK butuh PRO $9/bln | Tidak perlu | Docker Spaces berbayar |
+| Railway | Ya | Trial $5 / 30 hari | Perlu | Trial berbatas waktu |
 | Koyeb | Ya | Mulai $29/bulan | Perlu | Tidak ada free tier |
 | Google Cloud Run | Ya | Gratis dalam kuota | Perlu | Butuh kartu kredit |
-| Fly.io | Ya | ~$0,05/bulan dengan auto-stop | Perlu | Butuh kartu kredit |
+| Fly.io | Ya | ~$0,05/bulan | Perlu | Butuh kartu kredit |
 | Render | Ya | Free tier | Tidak perlu | Cold start ~50 detik |
-| Cloudflare Workers | **Tidak** | Gratis | Tidak perlu | Pyodide/WASM, bukan container |
+| Cloudflare Workers | Tidak | Gratis | Tidak perlu | Pyodide/WASM, kompleksitas konversi |
 
-Hugging Face Spaces adalah satu-satunya yang memenuhi tiga syarat sekaligus: mendukung
-Docker, gratis permanen (bukan trial), dan tidak meminta kartu kredit.
+Setelah Docker Spaces di Hugging Face berpindah ke plan PRO, tidak ada lagi platform yang
+memenuhi ketiga syarat sekaligus (Docker di production, gratis permanen, tanpa kartu
+kredit). Trade-off harus dipilih.
 
-Konsekuensi yang diterima: Space gratis tidur setelah beberapa waktu tidak diakses, dan
-URL-nya berbentuk `<user>-<space>.hf.space`. Untuk demo portfolio, kedua hal itu dapat
-diterima.
+Vercel dipilih karena mengorbankan hal yang paling sedikit merugikan: Docker tidak dipakai
+di jalur production, tetapi tetap dipakai untuk pengembangan lokal (`docker compose`) dan
+**diverifikasi otomatis di CI** — job `docker` membangun kedua image, menjalankannya, lalu
+melakukan smoke test pada setiap push. Jadi kemampuan containerization tetap terbukti,
+bukan sekadar diklaim.
 
-Cloudflare Workers sengaja dilewati meski gratis: ia menjalankan Python di Pyodide/WASM,
-bukan container. Memakainya berarti `docker/api.Dockerfile` tidak lagi dipakai di
-production — kehilangan alasan utama proyek ini memakai Docker.
+Sebagai imbalannya: satu platform untuk web dan API (satu dashboard, satu tempat
+environment variable), cold start 1–2 detik alih-alih 50 detik seperti Render, dan tidak
+ada batas waktu trial.
+
+Konsekuensi yang diterima: request pertama setelah function idle memerlukan 1–2 detik.
 
 ---
 
@@ -46,103 +52,79 @@ harus sudah diketahui sebelum web di-build:
 
 Membalik langkah 1 dan 2 berarti web perlu di-build dua kali.
 
+Karena keduanya di Vercel, ini menjadi **dua project terpisah** dari repository yang sama,
+dibedakan oleh Root Directory.
+
 ---
 
-## Langkah 1 — Deploy API ke Hugging Face Spaces
+## Langkah 1 — Deploy API ke Vercel
 
-### 1.1 Cara sinkronisasi
+### 1.1 Cara kerjanya
 
-HF Spaces punya dua batasan yang memengaruhi struktur:
+Vercel Python Runtime memuat `index.py` di root project dan mencari variabel top-level
+bernama `app`. Tiga berkas di root repo yang mengaturnya:
 
-- Hanya membaca `Dockerfile` di root repo Space — tidak ada opsi path seperti platform lain.
-- Konfigurasi Space berada di YAML front matter `README.md`.
-
-Keduanya bertabrakan dengan repo ini: Dockerfile berada di `docker/api.Dockerfile`
-(karena build context-nya root repo, agar `data/recipes/` bisa di-`COPY`), dan `README.md`
-sudah dipakai sebagai dokumentasi portfolio.
-
-Solusinya: workflow `.github/workflows/deploy-hf.yml` menyiapkan *staging directory* yang
-**meniru struktur repo**, lalu mem-push-nya ke Space.
-
-```
-staging/
-├── Dockerfile            ← salinan docker/api.Dockerfile, TIDAK diubah
-├── README.md             ← dari docker/hf-space-README.md (front matter YAML)
-├── apps/api/
-│   ├── app/
-│   ├── pyproject.toml
-│   ├── uv.lock
-│   └── .python-version
-└── data/recipes/
-```
-
-Karena path di dalam staging identik dengan yang dirujuk Dockerfile, image yang dibangun
-HF **sama persis** dengan yang diverifikasi CI lewat `docker compose`. Tidak ada Dockerfile
-versi kedua yang bisa menyimpang.
-
-Sinkronisasi berjalan otomatis setiap kali workflow `CI` sukses di branch `main`. Kode
-yang gagal test tidak akan pernah sampai ke production.
-
-### 1.2 Buat Space
-
-1. Buka [huggingface.co/new-space](https://huggingface.co/new-space)
-2. **Space name**: `smart-living-api`
-3. **SDK**: pilih **Docker** → template **Blank**
-4. **Visibility**: Public
-5. **Create Space**
-
-Space akan kosong — itu normal, isinya datang dari CI.
-
-### 1.3 Siapkan token
-
-1. HF → **Settings** → **Access Tokens** → **New token**
-2. Nama bebas (mis. `github-actions`), **Role: Write**
-3. Copy token
-
-Lalu di GitHub:
-
-1. Repo → **Settings** → **Secrets and variables** → **Actions**
-2. **New repository secret**: nama `HF_TOKEN`, isi token tadi
-
-Tanpa secret ini workflow akan gagal dengan pesan yang jelas, bukan error yang
-membingungkan.
-
-### 1.4 Trigger deploy pertama
-
-Dua cara:
-
-- **Otomatis**: push apa pun ke `main`. Setelah CI hijau, `deploy-hf` berjalan sendiri.
-- **Manual**: GitHub → tab **Actions** → **Deploy API to Hugging Face Spaces** → **Run workflow**.
-
-### 1.5 Pantau build
-
-Buka halaman Space → tab **Logs**.
-
-| Tab | Yang dicari |
+| Berkas | Peran |
 |---|---|
-| **Build** | `Pushing Image`, lalu `Scheduling Space` |
-| **Container** | `Uvicorn running on http://0.0.0.0:8000` |
+| `index.py` | Entrypoint — hanya `from apps.api.app.main import app`, tanpa logika |
+| `requirements.txt` | Dependency runtime: fastapi, pydantic, pydantic-settings |
+| `vercel.json` | `excludeFiles` agar bundle ramping (web, test, docs tidak ikut) |
 
-Build pertama memakan 2–4 menit (multi-stage + `uv sync`). Build berikutnya lebih cepat
-karena layer dependency ter-cache.
+`uvicorn` sengaja **tidak** ada di `requirements.txt` — Vercel memuat ASGI app secara
+langsung, servernya disediakan platform. Menyertakannya hanya memperbesar bundle.
 
-### 1.6 Set variable
+Dataset di `data/recipes/` ikut ter-deploy karena tidak dikecualikan. `Settings`
+menemukannya lewat `_find_repo_root()` yang menelusuri ancestor sampai menemukan folder
+`data/recipes` — layout Vercel identik dengan checkout, jadi tidak ada perubahan kode.
 
-Space → **Settings** → **Variables and secrets** → **New variable**:
+Konsistensi ketiga berkas dijaga oleh `apps/api/tests/unit/test_vercel_deployment.py`:
+versi di `requirements.txt` harus sama dengan `pyproject.toml`, dataset tidak boleh masuk
+`excludeFiles`, dan entrypoint tidak boleh berisi logika.
+
+### 1.2 Buat project
+
+1. Buka [vercel.com](https://vercel.com) → **Add New** → **Project**
+2. Import repository `smart-living-API`
+3. **Project Name**: `smart-living-api` (menentukan subdomain)
+
+### 1.3 Konfigurasi
+
+| Setting | Nilai | Catatan |
+|---|---|---|
+| Framework Preset | **Other** | Vercel mendeteksi Python dari `requirements.txt` |
+| Root Directory | `/` | **Root repo**, bukan `apps/api` — dataset ada di luar folder itu |
+| Build Command | *(kosongkan)* | Tidak ada langkah build untuk Python |
+| Output Directory | *(kosongkan)* | |
+| Install Command | *(biarkan default)* | |
+
+Root Directory `/` adalah titik yang paling sering salah. `index.py` mengimpor
+`apps.api.app.main`, dan dataset berada di `data/recipes/` — keduanya hanya terjangkau
+bila context-nya root repo.
+
+### 1.4 Environment variable
+
+Sebelum deploy, tambahkan untuk semua environment:
 
 | Variabel | Nilai awal |
 |---|---|
 | `CORS_ORIGINS` | `http://localhost:3000` |
+| `LOG_LEVEL` | `INFO` |
 
-Diperbarui di langkah 3 setelah domain Vercel diketahui.
+`CORS_ORIGINS` diperbarui di langkah 3 setelah domain web diketahui.
 
-Yang **tidak perlu** diset — sudah ada default di Dockerfile atau `app/core/config.py`:
-`RECIPES_PATH`, `INGREDIENTS_PATH`, `DEFAULT_LIMIT`, `MAX_LIMIT`, `MIN_MATCH_THRESHOLD`.
+Yang **tidak perlu** diset — default di `app/core/config.py` sudah sesuai:
+`RECIPES_PATH`, `INGREDIENTS_PATH`, `DEFAULT_LIMIT`, `MAX_LIMIT`,
+`MIN_MATCH_THRESHOLD`, `MAX_INGREDIENTS_PER_REQUEST`, `MAX_INGREDIENT_NAME_LENGTH`.
 
-### 1.7 Verifikasi
+### 1.5 Deploy & verifikasi
+
+Klik **Deploy**, tunggu 1–2 menit, catat URL yang dihasilkan (mis.
+`https://smart-living-api.vercel.app`).
 
 ```bash
-curl https://callmerev95-smart-living-api.hf.space/api/v1/health
+API=https://smart-living-api.vercel.app
+
+curl -fsS "$API/api/v1/health"
 ```
 
 Harus mengembalikan:
@@ -151,19 +133,21 @@ Harus mengembalikan:
 {"status":"ok","recipeCount":60,"ingredientCount":94}
 ```
 
-Angka `60` yang penting — ia membuktikan dataset benar-benar ada di dalam image, bukan
-hanya bahwa API merespons.
+Angka `60` yang penting — ia membuktikan dataset benar-benar ikut ter-deploy, bukan hanya
+bahwa function merespons.
 
-Dokumentasi interaktif: `https://callmerev95-smart-living-api.hf.space/docs`
+Dokumentasi interaktif: `https://smart-living-api.vercel.app/docs`
 
 ---
 
 ## Langkah 2 — Deploy web ke Vercel
 
-### 2.1 Import project
+Project **kedua** dari repository yang sama.
 
-1. Buka [vercel.com](https://vercel.com) → **Add New** → **Project**
-2. Import repository `smart-living-API`
+### 2.1 Import
+
+1. Vercel → **Add New** → **Project** → import `smart-living-API` lagi
+2. **Project Name**: `smart-living-web` (atau nama lain — harus berbeda dari project API)
 
 ### 2.2 Konfigurasi
 
@@ -178,47 +162,42 @@ Vercel membaca `packageManager` di `package.json` dan memakai pnpm 11.24.0 otoma
 
 ### 2.3 Environment variable
 
-**Sebelum** klik Deploy, tambahkan untuk semua environment (Production, Preview,
-Development):
+**Sebelum** klik Deploy:
 
 | Variabel | Nilai |
 |---|---|
-| `NEXT_PUBLIC_API_BASE_URL` | `https://callmerev95-smart-living-api.hf.space` |
+| `NEXT_PUBLIC_API_BASE_URL` | URL API dari langkah 1.5, **tanpa trailing slash** |
 
-Tanpa trailing slash. Kalau variabel ini ditambahkan setelah deploy pertama, aplikasi akan
-build sukses tapi gagal saat dipakai — nilainya dibakar ke bundle, jadi butuh **redeploy**,
-bukan restart.
+Kalau variabel ini ditambahkan setelah deploy pertama, aplikasi akan build sukses tapi
+gagal saat dipakai — nilainya dibakar ke bundle, jadi butuh **redeploy**, bukan restart.
 
 ### 2.4 Deploy & catat domain
 
-Setelah deploy sukses, catat domainnya, misalnya:
-
-```
-https://smart-living-api.vercel.app
-```
+Setelah sukses, catat domainnya (mis. `https://smart-living-web.vercel.app`).
 
 Pada tahap ini web sudah hidup tapi request ke API masih gagal karena CORS — diperbaiki di
 langkah berikutnya.
 
 ---
 
-## Langkah 3 — Update CORS di Space
+## Langkah 3 — Update CORS di project API
 
-Space → **Settings** → **Variables and secrets** → ubah `CORS_ORIGINS`:
+Vercel → project **API** → **Settings** → **Environment Variables** → edit `CORS_ORIGINS`:
 
 ```
-CORS_ORIGINS = https://smart-living-api.vercel.app
+CORS_ORIGINS = https://smart-living-web.vercel.app
 ```
 
-Space akan restart otomatis (~30 detik).
+Lalu **Deployments** → deployment terakhir → **Redeploy**. Perubahan environment variable
+tidak otomatis memicu redeploy.
 
-### Mengizinkan preview deployment Vercel
+### Mengizinkan preview deployment
 
 Vercel membuat domain unik per pull request. Tambahkan domain yang diperlukan, dipisah
 koma:
 
 ```
-CORS_ORIGINS = https://smart-living-api.vercel.app,https://smart-living-api-git-dev.vercel.app
+CORS_ORIGINS = https://smart-living-web.vercel.app,https://smart-living-web-git-dev-callmerev95.vercel.app
 ```
 
 `CORS_ORIGINS` menerima format comma-separated maupun JSON array.
@@ -234,8 +213,8 @@ CORS_ORIGINS = https://smart-living-api.vercel.app,https://smart-living-api-git-
 ### 4.1 API
 
 ```bash
-API=https://callmerev95-smart-living-api.hf.space
-WEB=https://smart-living-api.vercel.app
+API=https://smart-living-api.vercel.app
+WEB=https://smart-living-web.vercel.app
 
 # Health + dataset
 curl -fsS "$API/api/v1/health"
@@ -244,6 +223,17 @@ curl -fsS "$API/api/v1/health"
 curl -fsS -X POST "$API/api/v1/recommendations" \
   -H "Content-Type: application/json" \
   -d '{"ingredients":["telur","ayam","wortel"]}'
+
+# Bahan tak dikenal — harus 200, bukan error
+curl -fsS -X POST "$API/api/v1/recommendations" \
+  -H "Content-Type: application/json" \
+  -d '{"ingredients":["telur","kangkung"]}'
+
+# Detail resep
+curl -fsS "$API/api/v1/recipes/recipe_001"
+
+# 404 yang benar
+curl -s -o /dev/null -w '%{http_code}\n' "$API/api/v1/recipes/recipe_999"
 
 # CORS preflight dari domain web
 curl -i -X OPTIONS "$API/api/v1/recommendations" \
@@ -256,7 +246,7 @@ Preflight harus mengembalikan header `access-control-allow-origin` berisi domain
 
 ### 4.2 Web
 
-Buka domain Vercel dan lalui alur:
+Buka domain web dan lalui alur:
 
 1. Masukkan `telur, ayam, wortel` → kartu resep muncul
 2. Chip normalisasi menampilkan `telur → Telur`
@@ -269,7 +259,7 @@ Buka domain Vercel dan lalui alur:
 
 Periksa sebelum membagikan link demo:
 
-- [ ] HTTPS aktif di kedua domain (HF dan Vercel menyediakannya otomatis)
+- [ ] HTTPS aktif di kedua domain (Vercel menyediakannya otomatis)
 - [ ] `CORS_ORIGINS` berisi domain web saja — **bukan** `*`
 - [ ] Tidak ada `.env` ter-commit: `git ls-files | grep -E "^\.env$|\.env\.local$"` harus kosong
 - [ ] Bundle client tidak memuat secret — hanya variabel `NEXT_PUBLIC_*` yang sampai ke browser
@@ -285,67 +275,62 @@ Periksa sebelum membagikan link demo:
 Ganti baris demo di `README.md`:
 
 ```markdown
-| **Demo** | https://smart-living-api.vercel.app |
-| **API Docs** | https://callmerev95-smart-living-api.hf.space/docs |
+| **Demo** | https://smart-living-web.vercel.app |
+| **API Docs** | https://smart-living-api.vercel.app/docs |
 ```
 
 ---
 
-## Keterbatasan Space gratis
+## Karakteristik serverless
 
-**Space tidur setelah beberapa waktu tidak diakses.** Request pertama setelah bangun
-memerlukan beberapa detik, dan berpotensi mengembalikan halaman loading HTML alih-alih
-JSON.
+**Cold start 1–2 detik.** Function yang idle akan "tidur"; request pertama setelahnya
+memerlukan waktu untuk inisialisasi. Sesudah itu request berjalan normal.
 
-Penanganan error yang sudah ada menurunkan dampaknya: bila response bukan JSON,
-`lib/api/client.ts` melempar `UNKNOWN_ERROR` dan UI menampilkan pesan beserta tombol
-"Coba lagi". Klik retry setelah Space bangun akan berhasil — tidak ada crash.
+Yang mempengaruhi cold start di proyek ini: dataset 96 KB dimuat sekali saat inisialisasi
+modul lewat composition root yang di-`lru_cache`. Karena kecil, dampaknya minimal.
 
-Bila di kemudian hari ini terasa mengganggu, ada tiga opsi:
+**Filesystem read-only.** API ini murni membaca — tidak ada operasi tulis ke disk sama
+sekali (diverifikasi: tidak ada `write_text`, `mkdir`, atau `tempfile` di `app/`). Jadi
+batasan ini tidak berpengaruh.
 
-| Opsi | Konsekuensi |
-|---|---|
-| Terima sebagai keterbatasan | Nol perubahan kode; reviewer mungkin perlu refresh sekali |
-| Retry otomatis di API client | Demo mulus, tapi menambah kode yang hanya melayani demo |
-| Cron ping `/api/v1/health` | Space tetap bangun, tapi mengakali batasan platform dan memakai kuota Actions |
+**Tanpa state antar request.** Recommendation engine deterministik dan stateless, jadi
+tidak ada yang perlu dipertahankan antar invocation.
 
 ---
 
 ## Troubleshooting
 
-### Workflow gagal: `Secret HF_TOKEN belum diset`
+### Build gagal: `ModuleNotFoundError: No module named 'apps'`
 
-Buat token dengan role **Write** di HF Settings → Access Tokens, lalu tambahkan sebagai
-repository secret bernama `HF_TOKEN` di GitHub.
+Root Directory bukan `/`. `index.py` mengimpor `apps.api.app.main`, yang hanya terjangkau
+bila context-nya root repo.
 
-### Workflow gagal saat push: `Authentication failed`
+### Function error: dataset tidak ditemukan
 
-Token kedaluwarsa atau role-nya **Read** alih-alih **Write**. Buat token baru dan perbarui
-secret.
+Dua kemungkinan:
 
-### HF build gagal: `COPY failed: no source files`
+1. `data/` masuk ke `excludeFiles` di `vercel.json` — periksa, seharusnya tidak ada. Test
+   `test_dataset_not_excluded` menjaga ini.
+2. Root Directory salah, sehingga `data/recipes/` tidak ikut ter-deploy.
 
-Struktur staging tidak cocok dengan yang dirujuk Dockerfile. Workflow punya step
-"Verifikasi isi staging" yang seharusnya menangkap ini lebih dulu — periksa log step
-tersebut.
+### Bundle melewati batas ukuran
 
-### Space status `Runtime error`, container mati
+Periksa `excludeFiles` di `vercel.json`. Yang seharusnya dikecualikan: `apps/web/**`,
+`apps/api/tests/**`, `apps/api/scripts/**`, `apps/api/.venv/**`, `docs/**`, `docker/**`,
+`.github/**`, dan artefak `__pycache__`.
 
-Buka tab **Container** di Logs. Penyebab yang mungkin: dataset tidak ditemukan. Verifikasi
-`RECIPES_PATH` dan `INGREDIENTS_PATH` — keduanya sudah diset absolut di Dockerfile
-(`/app/data/recipes/`), jadi jangan di-override kecuali memang perlu.
+### Response 404 untuk semua endpoint
 
-### Space menampilkan halaman HTML, bukan JSON
-
-Space sedang bangun dari tidur. Tunggu beberapa detik dan coba lagi.
+Vercel tidak menemukan entrypoint. Pastikan `index.py` ada di root repo dan mengekspor
+variabel bernama `app` (bukan `handler` atau nama lain).
 
 ### Web: CORS error di browser
 
 Tiga hal yang perlu dicek:
 
-1. `CORS_ORIGINS` di Space sudah berisi domain Vercel — persis, termasuk `https://`
+1. `CORS_ORIGINS` di project API sudah berisi domain web — persis, termasuk `https://`
 2. Tidak ada trailing slash di `NEXT_PUBLIC_API_BASE_URL`
-3. Space sudah selesai restart setelah variabel diubah
+3. Project API sudah **di-redeploy** setelah variabel diubah
 
 ### Web: memanggil `localhost:8000` di production
 
@@ -361,7 +346,8 @@ harus ada di Root Directory yang dikonfigurasi (`apps/web`).
 
 ## Menjalankan container secara lokal
 
-Untuk menguji image yang sama dengan production tanpa deploy:
+Docker tidak dipakai di jalur production, tetapi tetap dipelihara untuk pengembangan lokal
+dan diverifikasi di CI:
 
 ```bash
 docker compose up --build
@@ -385,9 +371,8 @@ docker compose up --build
 
 </details>
 
-Build image juga diverifikasi otomatis di CI (job `docker`): kedua image dibangun,
-dijalankan, lalu di-smoke test. Kalau Dockerfile rusak, CI merah sebelum sampai
-production — dan `deploy-hf` tidak akan berjalan karena ia menunggu CI sukses.
+Job `docker` di CI membangun kedua image, menjalankannya, lalu melakukan smoke test pada
+health endpoint, halaman web, dan alur rekomendasi. Kalau Dockerfile rusak, CI merah.
 
 ---
 
@@ -397,8 +382,9 @@ production — dan `deploy-hf` tidak akan berjalan karena ia menunggu CI sukses.
 |---|---|
 | [`../README.md`](../README.md) | Cara menjalankan lokal, contoh API |
 | [`technical-architecture.md`](technical-architecture.md) | §17 keamanan, §23 strategi Docker, §25 arsitektur deployment |
+| [`../index.py`](../index.py) | Entrypoint Vercel Python Runtime |
+| [`../requirements.txt`](../requirements.txt) | Dependency runtime untuk Vercel |
+| [`../vercel.json`](../vercel.json) | Konfigurasi bundle function |
 | [`../docker-compose.yml`](../docker-compose.yml) | Orkestrasi lokal |
-| [`../docker/api.Dockerfile`](../docker/api.Dockerfile) | Image API — dipakai HF Spaces |
-| [`../docker/web.Dockerfile`](../docker/web.Dockerfile) | Image web — dipakai compose & CI |
-| [`../docker/hf-space-README.md`](../docker/hf-space-README.md) | README + front matter untuk Space |
-| [`../.github/workflows/deploy-hf.yml`](../.github/workflows/deploy-hf.yml) | Workflow sinkronisasi |
+| [`../docker/api.Dockerfile`](../docker/api.Dockerfile) | Image API — lokal & CI |
+| [`../docker/web.Dockerfile`](../docker/web.Dockerfile) | Image web — lokal & CI |

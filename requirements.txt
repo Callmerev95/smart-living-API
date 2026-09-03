@@ -1,0 +1,10 @@
+# Dependency runtime untuk Vercel Python Runtime.
+#
+# Vercel membaca berkas ini dari root project. `uvicorn` sengaja TIDAK disertakan:
+# Vercel memuat ASGI app secara langsung, server-nya disediakan platform.
+#
+# Versi harus sama dengan `apps/api/pyproject.toml` — dijaga oleh
+# `apps/api/tests/unit/test_vercel_requirements.py`.
+fastapi==0.141.1
+pydantic==2.13.5
+pydantic-settings==2.15.0

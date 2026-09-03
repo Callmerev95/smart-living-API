@@ -493,25 +493,33 @@ kasus pembulatan yang menjaganya.
 
 ## Deployment
 
-Web ke **Vercel**, API ke **Hugging Face Spaces** lewat Dockerfile. Panduan lengkap
-beserta perbandingan platform, urutan langkah, dan checklist keamanan:
-**[`docs/deployment.md`](docs/deployment.md)**.
+Web **dan** API di **Vercel** — dua project dari repository yang sama, dibedakan oleh Root
+Directory. Panduan lengkap beserta perbandingan platform, urutan langkah, dan checklist
+keamanan: **[`docs/deployment.md`](docs/deployment.md)**.
 
 Ringkasnya:
 
-1. Deploy API ke HF Spaces — disinkronkan otomatis oleh
-   [`.github/workflows/deploy-hf.yml`](.github/workflows/deploy-hf.yml) setiap kali CI
-   hijau di `main`.
-2. Deploy web ke Vercel dengan `NEXT_PUBLIC_API_BASE_URL` = URL API.
-3. Set `CORS_ORIGINS` di Space ke domain Vercel — **bukan** `*`.
+1. Deploy API: Root Directory `/`, framework "Other". Vercel memuat
+   [`index.py`](index.py) sebagai Python Function.
+2. Deploy web: Root Directory `apps/web`, dengan `NEXT_PUBLIC_API_BASE_URL` = URL API.
+3. Set `CORS_ORIGINS` di project API ke domain web — **bukan** `*` — lalu redeploy.
 4. Uji alur end-to-end di production.
 
 Urutannya penting: `NEXT_PUBLIC_API_BASE_URL` dibakar saat build, jadi URL API harus
 sudah diketahui sebelum web di-build.
 
-HF Spaces dipilih karena mendukung Docker, gratis permanen, dan tidak meminta kartu
-kredit. `docker/api.Dockerfile` yang sama dipakai untuk compose lokal, verifikasi CI, dan
-production — bukan tiga file berbeda yang bisa saling menyimpang.
+### Soal Docker
+
+Docker tidak dipakai di jalur production. Setelah membandingkan platform, tidak ada yang
+menyediakan Docker gratis permanen tanpa kartu kredit — Hugging Face memindahkan Docker
+Spaces ke plan berbayar, Railway hanya memberi trial 30 hari, dan Render punya cold start
+50 detik. Vercel dipilih karena mengorbankan hal yang paling sedikit merugikan.
+
+Container tetap dipelihara dan **diverifikasi otomatis di CI**: job `docker` membangun
+kedua image, menjalankannya, lalu melakukan smoke test pada health endpoint, halaman web,
+dan alur rekomendasi pada setiap push. `docker compose up` juga tetap berfungsi untuk
+pengembangan lokal. Jadi kemampuan containerization terbukti oleh pipeline, bukan sekadar
+diklaim.
 
 ---
 
@@ -543,7 +551,7 @@ Daftar ini sengaja jujur — batas cakupan adalah bagian dari keputusan produk.
 | [`docs/development-roadmap.md`](docs/development-roadmap.md) | Urutan fase dan exit criteria |
 | [`docs/implementation-task-breakdown.md`](docs/implementation-task-breakdown.md) | 84 task dengan acceptance criteria |
 | [`docs/case-study.md`](docs/case-study.md) | Narasi produk: masalah, insight, trade-off |
-| [`docs/deployment.md`](docs/deployment.md) | Panduan deploy HF Spaces + Vercel |
+| [`docs/deployment.md`](docs/deployment.md) | Panduan deploy Vercel (web & API) |
 | [`AGENTS.md`](AGENTS.md) | Operating manual untuk kontributor & AI agent |
 
 ---
