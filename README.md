@@ -21,6 +21,16 @@ sebagai lapisan enhancement di masa depan, bukan fondasi.
 | **Coverage** | 100% pada `app/` (gate CI 90%) |
 | **Latency** | p50 1.1 ms, p95 1.4 ms (lokal, 200 request) |
 
+![Memasukkan telur, ayam, dan wortel lalu mendapat lima resep terurut dari 100% hingga 33% kecocokan, dilanjutkan membuka detail resep berisi bahan dan langkah memasak](docs/assets/demo.gif)
+
+| | |
+|---|---|
+| ![Halaman awal: input bahan kosong dengan tiga tombol contoh dan panel "Mulai dari bahan yang ada"](docs/assets/home.png) | ![Lima kartu resep terurut, masing-masing menampilkan persentase kecocokan, bahan yang sudah ada, dan bahan yang perlu dibeli](docs/assets/results.png) |
+| ![Chip "kangkung · tidak dikenali" bergaris putus-putus, tetapi tiga resep tetap muncul](docs/assets/unknown.png) | ![Detail resep Omelet Ayam Wortel: informasi waktu dan porsi, daftar bahan dengan penanda opsional, dan enam langkah memasak](docs/assets/detail.png) |
+
+Chip "tidak dikenali" pada gambar ketiga adalah Contract Delta v1.1: bahan di luar kamus
+dilaporkan apa adanya dengan HTTP 200, bukan ditolak sebagai error.
+
 ---
 
 ## Daftar Isi
@@ -147,6 +157,10 @@ Smart Living API (FastAPI)       validasi request & response
 Aturan ini **ditegakkan otomatis** oleh test yang mem-parsing AST setiap modul
 (`tests/unit/test_architecture_boundary.py`). Import `fastapi` di `app/domain/` akan
 membuat CI merah.
+
+Frontend juga menampilkan arsitektur ini kepada pembaca, di section "Di balik layar":
+
+![Section "Di balik layar" berisi contoh request dan response JSON, diagram alur tujuh lapisan dari browser sampai recipes.json, tech stack per lapisan, dan tiga keputusan teknis beserta trade-off-nya](docs/assets/showcase.png)
 
 ### Struktur repository
 

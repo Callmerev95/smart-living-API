@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // `scripts/capture.mts` dijalankan langsung oleh Node (type stripping), jadi
+    // import-nya harus menyebut ekstensi `.ts` apa adanya.
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
