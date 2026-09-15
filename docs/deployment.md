@@ -68,7 +68,7 @@ bernama `app`. Tiga berkas di root repo yang mengaturnya:
 |---|---|
 | `index.py` | Entrypoint — mengatur `sys.path` lalu re-export `app`, tanpa logika |
 | `requirements.txt` | Dependency runtime: fastapi, pydantic, pydantic-settings |
-| `vercel.json` | `excludeFiles` agar bundle ramping (web, test, docs tidak ikut) |
+| `vercel.json` | `regions: ["sin1"]` + `excludeFiles` agar bundle ramping (web, test, docs tidak ikut) |
 
 `uvicorn` sengaja **tidak** ada di `requirements.txt` — Vercel memuat ASGI app secara
 langsung, servernya disediakan platform. Menyertakannya hanya memperbesar bundle.
