@@ -366,6 +366,23 @@ sukses karena `index.py` sendiri valid.
 
 Test `test_entrypoint_adds_apps_api_to_sys_path` menjaga ini agar tidak terulang.
 
+### `FUNCTION_INVOCATION_FAILED` dengan `ValidationError` untuk `Settings`
+
+Runtime Logs menampilkan `pydantic_core...ValidationError: 6 validation errors for
+Settings` dengan `input_value=''` pada field numerik (`api_port`,
+`default_limit`, ...).
+
+Penyebab: env var numerik di dashboard Vercel ada tapi nilainya **string kosong**
+(biasanya karena meng-copy semua dari `.env.example` tanpa mengisi yang angka).
+Pydantic tidak bisa parse `''` jadi integer, `Settings()` melempar saat import,
+dan semua request 500.
+
+Perbaikan: hapus variabel kosong itu dari dashboard (cukup sisakan yang diisi:
+`CORS_ORIGINS`, `LOG_LEVEL`), lalu redeploy. Sebagai pengaman, validator
+`_empty_string_as_unset` di `app/core/config.py` menganggap string kosong sebagai
+tidak diset sehingga memakai default — dijaga oleh
+`test_empty_string_int_env_falls_back_to_default`.
+
 ### Build gagal: `ModuleNotFoundError` untuk modul lain
 
 Root Directory bukan `/`. Entrypoint dan `data/recipes/` hanya terjangkau bila context-nya

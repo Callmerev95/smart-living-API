@@ -76,6 +76,38 @@ class TestEnvOverride:
         monkeypatch.setenv("CORS_ORIGINS", "http://only.test")
         assert _settings().cors_origins == ["http://only.test"]
 
+    def test_empty_string_int_env_falls_back_to_default(
+        self, clean_env: None, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Var numerik kosong dari dashboard = tidak diset.
+
+        Tanpa ini satu env var kosong membuat Settings() melempar
+        ValidationError saat import → semua request 500
+        FUNCTION_INVOCATION_FAILED di Vercel.
+        """
+        for key in (
+            "API_PORT",
+            "DEFAULT_LIMIT",
+            "MAX_LIMIT",
+            "MIN_MATCH_THRESHOLD",
+            "MAX_INGREDIENTS_PER_REQUEST",
+            "MAX_INGREDIENT_NAME_LENGTH",
+        ):
+            monkeypatch.setenv(key, "")
+        settings = _settings()
+        assert settings.api_port == 8000
+        assert settings.default_limit == 5
+        assert settings.max_limit == 10
+        assert settings.min_match_threshold == 30
+        assert settings.max_ingredients_per_request == 30
+        assert settings.max_ingredient_name_length == 60
+
+    def test_blank_string_int_env_falls_back_to_default(
+        self, clean_env: None, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("DEFAULT_LIMIT", "   ")
+        assert _settings().default_limit == 5
+
 
 class TestPathResolution:
     def test_relative_path_resolved_against_repo_root(

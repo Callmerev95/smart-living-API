@@ -10,7 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
 
-from pydantic import Field, field_validator
+from pydantic import Field, ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
@@ -77,6 +77,27 @@ class Settings(BaseSettings):
             if stripped.startswith("["):
                 return json.loads(stripped)
             return [origin.strip() for origin in stripped.split(",") if origin.strip()]
+        return value
+
+    @field_validator(
+        "api_port",
+        "default_limit",
+        "max_limit",
+        "min_match_threshold",
+        "max_ingredients_per_request",
+        "max_ingredient_name_length",
+        mode="before",
+    )
+    @classmethod
+    def _empty_string_as_unset(cls, value: object, info: ValidationInfo) -> object:
+        """Env var kosong dianggap tidak diset → pakai default.
+
+        Dashboard memudahkan orang membuat variabel dengan nilai kosong; tanpa
+        ini satu var kosong membuat Settings() melempar ValidationError saat
+        import sehingga SEMUA request 500 FUNCTION_INVOCATION_FAILED.
+        """
+        if isinstance(value, str) and not value.strip():
+            return cls.model_fields[info.field_name].default
         return value
 
     @field_validator("recipes_path", "ingredients_path", mode="after")
