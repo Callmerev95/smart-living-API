@@ -9,9 +9,14 @@ import { content } from "@/lib/constants/content";
 /**
  * Area portfolio (`docs/content-schema.md` §B.10).
  *
+ * Susunan vertikal penuh lebar, bukan dua grid 2 kolom: isi tiap blok punya
+ * tinggi yang jauh berbeda (request pendek, response panjang, arsitektur
+ * panjang, stack pendek), jadi memaksanya bersebelahan meninggalkan ruang
+ * kosong besar dan membuat response butuh scroll horizontal. Urutan mengikuti
+ * narasi: kirim, terima, bagaimana bekerja, dengan apa, kenapa begini.
+ *
  * Satu band surface-muted memisahkan area developer dari alur user utama
- * (PRD §5): hierarki lewat permukaan, bukan warna tambahan. Eyebrow mono
- * turmeric menegaskan itu sebagai label data, bukan dekorasi.
+ * (PRD §5): hierarki lewat permukaan, bukan warna tambahan.
  */
 export function ApiShowcase() {
   return (
@@ -26,21 +31,21 @@ export function ApiShowcase() {
         <p className="text-sm text-ink-soft">{content.showcase.subheading}</p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      {/* Pasangan request-response: gap 4 di dalam grup, 8 antar grup (2x). */}
+      <div className="flex flex-col gap-4">
         <RequestExample />
         <ResponseExample />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ArchitectureDiagram />
-        <TechStack />
-      </div>
+      <ArchitectureDiagram />
+
+      <TechStack />
 
       <TechnicalDecisions />
 
       <a
         href={getDocsUrl()}
-        className="w-fit text-sm font-medium text-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-turmeric"
+        className="w-fit text-sm font-medium text-ink underline underline-offset-4 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-turmeric"
       >
         {content.showcase.docsLabel}
       </a>
