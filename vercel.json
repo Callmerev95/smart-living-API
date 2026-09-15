@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["sin1"],
   "functions": {
     "index.py": {
+      "regions": ["sin1"],
       "excludeFiles": "{apps/web/**,apps/api/tests/**,apps/api/scripts/**,apps/api/.venv/**,docs/**,docker/**,.github/**,**/__pycache__/**,**/*.pyc}"
     }
   }

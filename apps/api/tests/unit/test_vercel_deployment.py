@@ -129,17 +129,19 @@ class TestVercelConfig:
         assert "data/" not in excluded
 
     def test_region_pinned_to_sin1(self) -> None:
-        """Region default WAJIB sin1 (Singapore).
+        """Region function WAJIB sin1 (Singapore).
 
         Tanpa pin ini Vercel memakai region default (iad1/Washington) sehingga
         latency ke user Indonesia tinggi — dan tiap project baru harus diubah
-        manual di dashboard lalu redeploy. Pin di kode membuat deploy pertama
-        langsung ke region yang benar.
+        manual di dashboard lalu redeploy. Pin ditaruh per-function di
+        `functions["index.py"]` (bukan top-level `regions`): bentuk top-level
+        membuat validasi config menolak pattern `index.py` dengan error
+        "doesn't match any Serverless Functions".
         """
         import json
 
         config = json.loads(VERCEL_CONFIG.read_text(encoding="utf-8"))
-        assert config.get("regions") == ["sin1"]
+        assert config["functions"]["index.py"].get("regions") == ["sin1"]
 
 
 class TestDatasetAvailability:
