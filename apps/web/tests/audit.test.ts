@@ -135,6 +135,14 @@ describe("audit deployment config", () => {
     expect(vc![1]).toContain('"nextjs"');
   });
 
+  it("vercel.json mem-pin region sin1", async () => {
+    // Tanpa pin ini project web baru jatuh ke region default (iad1/Washington).
+    // Pin di kode membuat deploy pertama langsung ke Singapore.
+    const vc = (await loadSources("config")).find(([path]) => path.endsWith("vercel.json"));
+    expect(vc).toBeDefined();
+    expect(JSON.parse(vc![1]).regions).toEqual(["sin1"]);
+  });
+
   it("output standalone conditional pada VERCEL env", async () => {
     const sources = await loadSources("config");
     const cfg = sources.find(([path]) => path.endsWith("next.config.ts"));
