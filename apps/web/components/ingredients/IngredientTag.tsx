@@ -19,11 +19,11 @@ export function IngredientTag(props: IngredientTagProps) {
       <span
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full border border-dashed",
-          "border-zinc-400 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-600",
+          "border-line-strong bg-surface px-2.5 py-0.5 text-xs text-ink-soft",
         )}
       >
-        <span className="font-medium line-through decoration-zinc-400">{props.raw}</span>
-        <span className="text-zinc-500">·</span>
+        <span className="font-medium line-through">{props.raw}</span>
+        <span>·</span>
         <span>{content.chip.unknownSuffix}</span>
         <span className="sr-only">{content.chip.unknownTooltip}</span>
       </span>
@@ -34,11 +34,11 @@ export function IngredientTag(props: IngredientTagProps) {
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full border border-amber-200",
-          "bg-amber-50 px-2.5 py-0.5 text-xs text-amber-900",
+          "inline-flex items-center gap-1.5 rounded-full border border-clay/30",
+          "bg-clay-soft px-2.5 py-0.5 text-xs text-clay",
         )}
       >
-        <span className="text-amber-700">{props.raw}</span>
+        <span className="opacity-80">{props.raw}</span>
         <span aria-hidden="true">→</span>
         <span className="font-medium">{props.displayName}</span>
         <span className="sr-only">
@@ -51,8 +51,8 @@ export function IngredientTag(props: IngredientTagProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border border-zinc-200",
-        "bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700",
+        "inline-flex items-center rounded-full border border-line bg-surface",
+        "px-2.5 py-0.5 text-xs font-medium text-ink",
       )}
     >
       {props.displayName}

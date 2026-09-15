@@ -29,9 +29,9 @@ export default function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          backgroundColor: "#fffbeb",
+          backgroundColor: "#faf7f2",
           backgroundImage:
-            "linear-gradient(135deg, #fffbeb 0%, #fef3c7 55%, #fde68a 100%)",
+            "linear-gradient(135deg, #faf7f2 0%, #f6ede1 55%, #f2ebe1 100%)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -40,10 +40,10 @@ export default function Image() {
               width: 44,
               height: 44,
               borderRadius: 12,
-              backgroundColor: "#f59e0b",
+              backgroundColor: "#8c3a21",
             }}
           />
-          <div style={{ fontSize: 34, fontWeight: 600, color: "#78350f" }}>
+          <div style={{ fontSize: 34, fontWeight: 600, color: "#2a2320" }}>
             {content.brand.name}
           </div>
         </div>
@@ -54,17 +54,17 @@ export default function Image() {
               fontSize: 62,
               fontWeight: 700,
               lineHeight: 1.15,
-              color: "#18181b",
+              color: "#2a2320",
             }}
           >
             {content.hero.title}
           </div>
-          <div style={{ fontSize: 30, color: "#52525b", lineHeight: 1.35 }}>
+          <div style={{ fontSize: 30, color: "#6b5f55", lineHeight: 1.35 }}>
             {content.hero.subtitle}
           </div>
         </div>
 
-        <div style={{ fontSize: 26, color: "#92400e", fontWeight: 500 }}>
+        <div style={{ fontSize: 26, color: "#9e5900", fontWeight: 600, fontFamily: "monospace" }}>
           {content.hero.badge}
         </div>
       </div>

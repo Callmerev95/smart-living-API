@@ -18,6 +18,12 @@ export const content = {
     skipToContent: "Lompat ke konten utama",
   },
 
+  theme: {
+    // Label statis (bukan per-state) agar toggle tidak butuh state React dan
+    // tidak berisiko hydration mismatch.
+    switchLabel: "Ganti tema terang atau gelap",
+  },
+
   hero: {
     title: "Apa yang bisa saya masak dari bahan yang sudah ada?",
     subtitle:
@@ -82,6 +88,7 @@ export const content = {
   card: {
     matchLabel: "{percentage}% cocok",
     availableLabel: "Sudah ada",
+    availableEmpty: "Belum ada yang cocok",
     missingLabel: "Perlu dibeli",
     missingEmpty: "Semua bahan utama sudah ada",
     timeLabel: "{minutes} menit",
@@ -189,12 +196,12 @@ export const content = {
   },
 
   meta: {
-    title: "Smart Living — Masak dari bahan yang sudah ada",
+    title: "Smart Living · Masak dari bahan yang sudah ada",
     description:
       "Masukkan bahan yang ada di kulkas, dapatkan rekomendasi masakan yang bisa langsung kamu buat. API-first, deterministic matching.",
     ogTitle: "Smart Living",
-    // Judul halaman detail: `{name} — Smart Living`.
-    detailTitle: "{name} — Smart Living",
+    // Judul halaman detail: `{name} · Smart Living`.
+    detailTitle: "{name} · Smart Living",
   },
 } as const;
 

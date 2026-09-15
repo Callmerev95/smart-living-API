@@ -4,9 +4,11 @@ import type { Recipe } from "@/types/api";
 
 export function RecipeHeader({ recipe }: { recipe: Recipe }) {
   return (
-    <header className="flex flex-col gap-2">
-      <h1 className="text-3xl font-semibold text-zinc-900">{recipe.name}</h1>
-      <p className="text-zinc-600">{recipe.description}</p>
+    <header className="flex flex-col gap-3">
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        {recipe.name}
+      </h1>
+      <p className="text-ink-soft">{recipe.description}</p>
       <div className="flex flex-wrap gap-2">
         {recipe.tags.map((tag) => (
           <Badge key={tag}>{tag}</Badge>
@@ -19,8 +21,8 @@ export function RecipeHeader({ recipe }: { recipe: Recipe }) {
 export function RecipeMeta({ recipe }: { recipe: Recipe }) {
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-lg font-semibold text-zinc-900">{content.detail.metaHeading}</h2>
-      <p className="text-sm text-zinc-600">
+      <h2 className="font-display text-xl font-semibold text-ink">{content.detail.metaHeading}</h2>
+      <p className="font-mono text-sm text-ink-soft tabular-nums">
         {fill(content.card.timeLabel, { minutes: recipe.cookingTimeMinutes })}
         {" · "}
         {content.card.difficulty[recipe.difficulty] ?? recipe.difficulty}
@@ -33,32 +35,36 @@ export function RecipeMeta({ recipe }: { recipe: Recipe }) {
 
 export function RecipeIngredientList({ recipe }: { recipe: Recipe }) {
   return (
-    <section className="flex flex-col gap-2">
-      <h2 className="text-lg font-semibold text-zinc-900">
+    <section className="flex flex-col gap-3">
+      <h2 className="font-display text-xl font-semibold text-ink">
         {content.detail.ingredientsHeading}
       </h2>
-      <ul className="flex flex-col gap-1 text-sm text-zinc-700">
+      <ul className="flex flex-col gap-1.5 text-sm">
         {recipe.ingredients.map((item) => (
-          <li key={item.name} className="flex items-center gap-2">
-            <span>{item.name}</span>
+          <li key={item.name} className="flex items-center gap-2 text-ink-soft">
+            {/* Titik clay sebagai penanda daftar: motif identitas, bukan bullet default. */}
+            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-clay" />
+            <span className="font-medium text-ink">{item.name}</span>
             {!item.required && (
-              <span className="text-xs text-zinc-500">{content.detail.optionalSuffix}</span>
+              <span className="text-xs text-ink-soft">{content.detail.optionalSuffix}</span>
             )}
           </li>
         ))}
       </ul>
-      <p className="text-xs text-zinc-500">{content.detail.stapleNote}</p>
+      <p className="text-xs text-ink-soft">{content.detail.stapleNote}</p>
     </section>
   );
 }
 
 export function RecipeInstructionList({ recipe }: { recipe: Recipe }) {
   return (
-    <section className="flex flex-col gap-2">
-      <h2 className="text-lg font-semibold text-zinc-900">{content.detail.stepsHeading}</h2>
-      <ol className="flex list-decimal flex-col gap-2 pl-5 text-sm text-zinc-700">
+    <section className="flex flex-col gap-3">
+      <h2 className="font-display text-xl font-semibold text-ink">{content.detail.stepsHeading}</h2>
+      <ol className="flex list-decimal flex-col gap-2 pl-5 text-sm text-ink marker:font-mono marker:text-turmeric">
         {recipe.steps.map((step, index) => (
-          <li key={index}>{step}</li>
+          <li key={index} className="leading-relaxed pl-1">
+            {step}
+          </li>
         ))}
       </ol>
     </section>

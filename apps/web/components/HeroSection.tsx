@@ -1,14 +1,20 @@
-import { Badge } from "@/components/ui/Badge";
 import { content } from "@/lib/constants/content";
 
+/**
+ * Hero tanpa badge kapsul: klaim "API-first, deterministic" tampil sebagai
+ * baris mono kecil (data voice, DESIGN.md) di atas heading display serif.
+ */
 export function HeroSection() {
   return (
-    <section className="flex flex-col items-start gap-3">
-      <Badge tone="info">{content.hero.badge}</Badge>
-      <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+    <section className="flex flex-col gap-4">
+      <p className="inline-flex items-center gap-2 font-mono text-xs font-medium text-turmeric">
+        <span aria-hidden="true" className="size-1.5 rounded-full bg-clay" />
+        {content.hero.badge}
+      </p>
+      <h1 className="max-w-2xl font-display text-4xl leading-tight font-semibold tracking-tight text-ink sm:text-5xl">
         {content.hero.title}
       </h1>
-      <p className="max-w-2xl text-lg text-zinc-600">{content.hero.subtitle}</p>
+      <p className="max-w-xl text-lg text-ink-soft">{content.hero.subtitle}</p>
     </section>
   );
 }

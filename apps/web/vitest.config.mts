@@ -6,6 +6,12 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.{ts,tsx}"],
+    environmentOptions: {
+      jsdom: {
+        // localStorage jsdom hanya aktif dengan origin non-opaque (butuh toggle tema).
+        url: "http://localhost:3000",
+      },
+    },
   },
   resolve: {
     alias: {

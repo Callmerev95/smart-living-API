@@ -74,9 +74,11 @@ export function RecommendationSection({
   if (status === "idle") {
     return (
       <section aria-label={content.results.sectionLabel}>
-        <div className="rounded-lg border border-dashed border-zinc-300 p-8 text-center">
-          <h2 className="text-lg font-semibold text-zinc-900">{content.results.initial.title}</h2>
-          <p className="mt-2 text-sm text-zinc-600">{content.results.initial.body}</p>
+        <div className="flex flex-col gap-2 rounded-xl border border-dashed border-line-strong p-8">
+          <h2 className="font-display text-xl font-semibold text-ink">
+            {content.results.initial.title}
+          </h2>
+          <p className="max-w-xl text-sm text-ink-soft">{content.results.initial.body}</p>
         </div>
       </section>
     );
@@ -111,8 +113,8 @@ export function RecommendationSection({
   return (
     <section className="flex flex-col gap-4" aria-label={content.results.sectionLabel}>
       <div className="flex flex-col gap-1" role="status">
-        <h2 className="text-2xl font-semibold text-zinc-900">{heading}</h2>
-        <p className="text-sm text-zinc-500">{content.results.success.sortNote}</p>
+        <h2 className="font-display text-2xl font-semibold text-ink">{heading}</h2>
+        <p className="text-sm text-ink-soft">{content.results.success.sortNote}</p>
       </div>
       <NormalizedIngredientChips data={data} displayNames={displayNames} />
       <RecommendationList results={data.results} />

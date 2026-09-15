@@ -1,16 +1,99 @@
 @import "tailwindcss";
 
+/*
+ * Dark mode class-based (`.dark` di <html>): keputusan tema milik user via
+ * toggle di header, bukan milik OS. Riwayat bug lama: dark otomatis menghasilkan
+ * teks terang di atas latar terang.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Palet earthy-rempah (DESIGN.md). Nilai mentah di --sl-*, dipetakan ke
+ * --color-* lewat @theme inline agar Tailwind membuat utilitas (bg-surface,
+ * text-ink, border-line, dst). Setiap pasangan teks/latar >= 4.5:1 (WCAG AA),
+ * diverifikasi dengan kalkulator kontras.
+ */
+:root {
+  --sl-bg: #faf7f2;
+  --sl-surface: #ffffff;
+  --sl-surface-muted: #f2ebe1;
+  --sl-line: #e3d8c8;
+  --sl-line-strong: #d3c4ae;
+  --sl-ink: #2a2320;
+  --sl-ink-soft: #6b5f55;
+  --sl-clay: #8c3a21;
+  --sl-on-clay: #fff8f3;
+  --sl-clay-soft: #f6e7df;
+  --sl-olive: #4f6b3b;
+  --sl-olive-soft: #eaf0e2;
+  --sl-turmeric: #9e5900;
+  --sl-on-turmeric: #ffffff;
+  --sl-turmeric-soft: #f7ebd5;
+  --sl-brick: #b3261e;
+  --sl-on-brick: #ffffff;
+  --sl-brick-soft: #fbe9e7;
+}
+
+.dark {
+  --sl-bg: #17130f;
+  --sl-surface: #211b16;
+  --sl-surface-muted: #2b231c;
+  --sl-line: #3b3027;
+  --sl-line-strong: #4c3e32;
+  --sl-ink: #f2eadf;
+  --sl-ink-soft: #b5a493;
+  --sl-clay: #e79063;
+  --sl-on-clay: #2a140a;
+  --sl-clay-soft: #3a241a;
+  --sl-olive: #a6c88a;
+  --sl-olive-soft: #28331f;
+  --sl-turmeric: #e8a93a;
+  --sl-on-turmeric: #241a06;
+  --sl-turmeric-soft: #3a2e14;
+  --sl-brick: #f2938c;
+  --sl-on-brick: #2a0d0a;
+  --sl-brick-soft: #3a1e1c;
+}
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+
+  --color-bg: var(--sl-bg);
+  --color-surface: var(--sl-surface);
+  --color-surface-muted: var(--sl-surface-muted);
+  --color-line: var(--sl-line);
+  --color-line-strong: var(--sl-line-strong);
+  --color-ink: var(--sl-ink);
+  --color-ink-soft: var(--sl-ink-soft);
+  --color-clay: var(--sl-clay);
+  --color-on-clay: var(--sl-on-clay);
+  --color-clay-soft: var(--sl-clay-soft);
+  --color-olive: var(--sl-olive);
+  --color-olive-soft: var(--sl-olive-soft);
+  --color-turmeric: var(--sl-turmeric);
+  --color-on-turmeric: var(--sl-on-turmeric);
+  --color-turmeric-soft: var(--sl-turmeric-soft);
+  --color-brick: var(--sl-brick);
+  --color-on-brick: var(--sl-on-brick);
+  --color-brick-soft: var(--sl-brick-soft);
 }
 
 /*
- * Font Geist dimuat di `app/layout.tsx` dan diekspos sebagai `--font-geist-sans`.
- * Sebelumnya body memakai `Arial` sehingga font yang sudah di-preload tidak pernah
- * terpakai. Warna latar/teks diatur lewat class Tailwind di layout, bukan di sini,
- * agar tidak ada dua sumber kebenaran.
+ * Font display dimuat di `app/layout.tsx` sebagai `--font-fraunces`. Body tetap
+ * sans; display dipakai selektif pada heading.
  */
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

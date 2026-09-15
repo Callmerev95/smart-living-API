@@ -11,7 +11,9 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-lg border border-zinc-200 bg-white p-5 shadow-sm",
+        // Tanpa shadow: kartu duduk rata di permukaan, struktur dari border
+        // (DESIGN.md bentuk). Shadow hanya untuk elemen yang melayang.
+        "rounded-xl border border-line bg-surface p-5",
         className,
       )}
     >

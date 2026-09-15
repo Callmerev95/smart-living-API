@@ -76,7 +76,11 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3" noValidate>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 sm:p-6"
+      noValidate
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div className="flex-1">
           <Input
@@ -109,12 +113,12 @@ export function IngredientInput({ onSubmit, loading = false }: IngredientInputPr
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-zinc-500">{content.input.exampleLabel}</span>
+        <span className="text-sm text-ink-soft">{content.input.exampleLabel}</span>
         {content.input.examples.map((example) => (
           <Button
             key={example}
             variant="secondary"
-            className="px-2.5 py-1 text-xs"
+            className="px-3 py-1.5 text-xs"
             disabled={loading}
             onClick={() => handleExample(example)}
           >

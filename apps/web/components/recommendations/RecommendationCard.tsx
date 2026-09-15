@@ -9,7 +9,8 @@ import type { Recommendation } from "@/types/api";
  * Kartu rekomendasi (`docs/component-architecture.md` §7, copy §B.6).
  *
  * Component ini tidak menghitung apa pun — seluruh nilai berasal dari props.
- * Available/missing dibedakan lewat label teks, bukan hanya warna.
+ * Available/missing dibedakan lewat label teks, bukan hanya warna. Angka meta
+ * (waktu, porsi) memakai mono: motif "data voice" (DESIGN.md).
  */
 export function RecommendationCard({ recommendation }: { recommendation: Recommendation }) {
   const {
@@ -26,22 +27,25 @@ export function RecommendationCard({ recommendation }: { recommendation: Recomme
 
   return (
     <Card className="flex flex-col gap-3">
-      <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold text-zinc-900">{name}</h3>
-        <MatchBadge percentage={matchPercentage} />
-        <p className="text-sm text-zinc-600">{description}</p>
+      <MatchBadge percentage={matchPercentage} />
+
+      <div className="flex flex-col gap-1.5">
+        <h3 className="text-lg leading-snug font-semibold text-ink">{name}</h3>
+        <p className="text-sm text-ink-soft">{description}</p>
       </div>
 
-      <dl className="flex flex-col gap-2 text-sm">
-        <div>
-          <dt className="font-medium text-zinc-700">{content.card.availableLabel}</dt>
-          <dd className="text-zinc-600">
-            {availableIngredients.length > 0 ? availableIngredients.join(", ") : "—"}
+      <dl className="flex flex-col gap-2 border-t border-line pt-3 text-sm">
+        <div className="flex flex-col gap-0.5">
+          <dt className="text-xs font-medium text-ink-soft">{content.card.availableLabel}</dt>
+          <dd className="text-olive">
+            {availableIngredients.length > 0
+              ? availableIngredients.join(", ")
+              : content.card.availableEmpty}
           </dd>
         </div>
-        <div>
-          <dt className="font-medium text-zinc-700">{content.card.missingLabel}</dt>
-          <dd className="text-zinc-600">
+        <div className="flex flex-col gap-0.5">
+          <dt className="text-xs font-medium text-ink-soft">{content.card.missingLabel}</dt>
+          <dd className="text-ink-soft">
             {missingIngredients.length > 0
               ? missingIngredients.join(", ")
               : content.card.missingEmpty}
@@ -49,7 +53,7 @@ export function RecommendationCard({ recommendation }: { recommendation: Recomme
         </div>
       </dl>
 
-      <p className="text-sm text-zinc-500">
+      <p className="font-mono text-xs text-ink-soft tabular-nums">
         {fill(content.card.timeLabel, { minutes: cookingTimeMinutes })}
         {" · "}
         {content.card.difficulty[difficulty] ?? difficulty}
@@ -59,7 +63,7 @@ export function RecommendationCard({ recommendation }: { recommendation: Recomme
 
       <Link
         href={`/recipes/${id}`}
-        className="mt-auto inline-flex w-fit items-center rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        className="mt-auto inline-flex min-h-11 w-fit items-center rounded-lg border border-line-strong px-4 text-sm font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-turmeric"
       >
         {content.card.cta}
       </Link>

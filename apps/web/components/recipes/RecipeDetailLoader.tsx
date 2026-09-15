@@ -57,13 +57,13 @@ export function RecipeDetailLoader({ recipeId }: { recipeId: string }) {
     <div className="flex flex-col gap-6">
       <Link
         href="/"
-        className="inline-flex w-fit items-center text-sm font-medium text-zinc-600 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        className="inline-flex min-h-11 w-fit items-center text-sm font-medium text-ink-soft underline-offset-4 hover:text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-turmeric"
       >
         {content.detail.back}
       </Link>
 
       {state.status === "loading" && (
-        <p className="flex items-center gap-2 text-sm text-zinc-600">
+        <p className="flex items-center gap-2 text-sm text-ink-soft">
           <Spinner />
           {content.detail.loading}
         </p>

@@ -238,3 +238,17 @@ Diambil dari PRD §26, dicatat agar tidak mengganggu MVP:
 4. Kuantitas bahan dihitung? → **Out of scope MVP** (V1.1).
 5. Lisensi/sumber resep saat dataset besar? → `source: "original"` saat ini.
 6. Rate limiting / publikasi API? → simple in-memory limit opsional di phase 6.
+
+<!-- antislop:start -->
+## antislop
+Untuk pekerjaan UI, copy, people, mobile layout, atau code comments: baca `DESIGN.md`
+(direksi desain project ini) lalu skill antislop terpasang global:
+- Core filter: `~/.agents/skills/antislop/SKILL.md`
+- UI / visual: `~/.agents/skills/antislop-ui/SKILL.md`
+- Copy & text: `~/.agents/skills/antislop-copywriting/SKILL.md`
+- People: `~/.agents/skills/antislop-human/SKILL.md`
+- Mobile / responsive: `~/.agents/skills/antislop-layoutmobile/SKILL.md`
+- Code comments: `~/.agents/skills/antislop-code/SKILL.md`
+Sebelum mulai, tanyakan ke user antislop berlaku saat kerja (DURING) atau setelah
+selesai (AFTER).
+<!-- antislop:end -->

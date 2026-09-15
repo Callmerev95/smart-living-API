@@ -9,19 +9,21 @@ import { content } from "@/lib/constants/content";
 /**
  * Area portfolio (`docs/content-schema.md` §B.10).
  *
- * Ditempatkan di bawah alur fungsional agar tidak mengganggu journey utama
- * (PRD §5: prioritaskan satu journey yang sangat baik). Eyebrow "Untuk developer"
- * menegaskan pemisahan itu secara visual.
+ * Satu band surface-muted memisahkan area developer dari alur user utama
+ * (PRD §5): hierarki lewat permukaan, bukan warna tambahan. Eyebrow mono
+ * turmeric menegaskan itu sebagai label data, bukan dekorasi.
  */
 export function ApiShowcase() {
   return (
-    <section className="flex flex-col gap-6 border-t border-zinc-200 pt-10">
+    <section className="flex flex-col gap-8 rounded-xl border border-line bg-surface-muted p-6 sm:p-8">
       <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
+        <p className="font-mono text-xs font-medium text-turmeric">
           {content.showcase.eyebrow}
         </p>
-        <h2 className="text-2xl font-semibold text-zinc-900">{content.showcase.heading}</h2>
-        <p className="text-sm text-zinc-600">{content.showcase.subheading}</p>
+        <h2 className="font-display text-2xl font-semibold text-ink">
+          {content.showcase.heading}
+        </h2>
+        <p className="text-sm text-ink-soft">{content.showcase.subheading}</p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -38,7 +40,7 @@ export function ApiShowcase() {
 
       <a
         href={getDocsUrl()}
-        className="w-fit text-sm font-medium text-zinc-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        className="w-fit text-sm font-medium text-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-turmeric"
       >
         {content.showcase.docsLabel}
       </a>

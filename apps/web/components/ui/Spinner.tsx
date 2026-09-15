@@ -7,7 +7,7 @@ export function Spinner({ className }: { className?: string }) {
       role="status"
       aria-label={content.ui.loadingLabel}
       className={cn(
-        "inline-block size-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent",
+        "inline-block size-4 animate-spin rounded-full border-2 border-ink-soft border-t-transparent",
         className,
       )}
     />

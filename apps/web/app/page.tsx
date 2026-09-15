@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <main
       id="main-content"
-      className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-12"
+      className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-6 sm:py-12"
     >
       <HeroSection />
       <IngredientInput onSubmit={handleSubmit} loading={status === "loading"} />
